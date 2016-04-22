@@ -13,15 +13,25 @@ svg { border: solid black 1px; margin: 10px; }
 
 <div id="histogram1"></div>
 <script>
+var teens = {};
+
 var width = 500,
     height = 500,
     padding = 20;
-    
+
 var svg = d3.select("#histogram1").append("svg")
 	.attr("width", width)
 	.attr("height", height)
 	.attr("id", "hist1");
 
+// Load the data for online dating for teens
+d3.csv("teen_dating.csv", function(error, teenIds) {
+	var arr = teenIds.filter(function (t) { 
+		return t.KR1 == 2 || t.KR1 == 3 || t.KR1 == 4; 
+	}).forEach(function (teen) {
+		teens[teen.CaseID] = { "use_od": teen.KR1, "site": teen.REL3 };
+	}); 
+});
 
 </script>
 </body>
