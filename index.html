@@ -14,6 +14,7 @@ svg { border: solid black 1px; margin: 10px; }
 <div id="histogram1"></div>
 <script>
 var teens = {};
+var adults;
 
 var width = 500,
     height = 500,
@@ -24,6 +25,7 @@ var svg = d3.select("#histogram1").append("svg")
 	.attr("height", height)
 	.attr("id", "hist1");
 
+
 // Load the data for online dating for teens
 d3.csv("teen_dating.csv", function(error, teenIds) {
 	var arr = teenIds.filter(function (t) { 
@@ -31,6 +33,47 @@ d3.csv("teen_dating.csv", function(error, teenIds) {
 	}).forEach(function (teen) {
 		teens[teen.CaseID] = { "use_od": teen.KR1, "site": teen.REL3 };
 	}); 
+});
+
+d3.csv("adult_dating.csv", function (error, data){
+	adults=data.filter(function (d){
+		return{
+			blocked: d.snsdate2a,
+			untagged: d.snsdate2c,
+			breakup: d.breaka,
+			brokenup: d.breakb,
+			usedDatingSite: d.date1a,
+			match: d.date1bm1,
+			eharmony:d.date1bm2,
+			okcupid: d.date1bm3,
+			plentyOfFish: d.date1bm4,
+			christianMingle: d.date1bm5,
+			true: d.date1bm6,
+			zoosk:d.date1bm7,
+			jdate:d.date1bm8,
+			dateHookup:d.date1bm9,
+			ashleyMadison:d.date1bm10,
+			facebook:d.date1bm11,
+			twitter:d.date1bm12,
+			adultFriendFinder:d.date1bm13,
+			blackplanet:d.date1bm14,
+			chemistry:d.date1bm15,
+			craigslist:d.date1bm16,
+			other:d.date1bm17,
+			goneOnDate:date5a,
+			longTermRelationship:date5b,
+			beenContacted:date5c,
+			misrepresentedThemselves:date5d,
+			helpCreateProfile:date5e,
+			alreadyKnewMatch:date5f,
+			goodWayToMeet:date9a,
+			findBetterMatch:date9b,
+			desperate:date9c,
+			alwaysHaveNewOptions:date9d
+
+
+		};
+	});
 });
 
 </script>
