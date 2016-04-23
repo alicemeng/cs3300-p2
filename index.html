@@ -25,13 +25,46 @@ var svg = d3.select("#histogram1").append("svg")
 	.attr("height", height)
 	.attr("id", "hist1");
 
+// Splits the string into properly spelled, capitalized sites
+var sanitizeSites = function (s) {
+	var sites = [];
+	return s.toUpperCase();
+};
 
 // Load the data for online dating for teens
 d3.csv("teen_dating.csv", function(error, teenIds) {
-	var arr = teenIds.filter(function (t) { 
-		return t.KR1 == 2 || t.KR1 == 3 || t.KR1 == 4; 
-	}).forEach(function (teen) {
-		teens[teen.CaseID] = { "use_od": teen.KR1, "site": teen.REL3 };
+	teenIds
+	.forEach(function (teen) {
+		teens[teen.CaseID] = {
+			useOnlineDating: null,
+			site: teen.REL3 ? sanitizeSites(teen.REL3) : [],
+			acceptableBreakup: {
+				text: teen.KR10_1,
+				inPerson: teen.KR10_2,
+				onlineMessage: teen.KR10_4,
+				statusChange: teen.KR10_6
+			},
+			yourBreakupMethod: {
+				inPerson: teen.KR11_B == 1,
+				textEmailOnline: teen.KR11_C == 1 || teen.KR11_D == 1 || teen.KR11_E == 1,
+				statusChange: teen.KR11_F == 1,
+				postStatus: teen.KR11_G == 1,
+				postImage: teen.KR11_H == 1
+			},
+			theirBreakupMethod: {
+				inPerson: teen.KR12_B == 1,
+				textEmailOnline: teen.KR12_C == 1 || teen.KR12_D == 1 || teen.KR12_E == 1,
+				statusChange: teen.KR12_F == 1,
+				postStatus: teen.KR12_G == 1,
+				postImage: teen.KR12_H == 1
+			},
+			unsocialEx: teen.KRSNS4_A == 1 || teen.KRSNS4_C == 1
+		};
+		if (teen.KR1 == 2 || teen.KR1 == 3 || teen.KR1 == 4) {
+			teens[teen.CaseID].useOnlineDating = true;
+		} else {
+			teens[teen.CaseID].useOnlineDating = false;
+		}
 	}); 
 });
 
@@ -60,18 +93,16 @@ d3.csv("adult_dating.csv", function (error, data){
 			chemistry:d.date1bm15,
 			craigslist:d.date1bm16,
 			other:d.date1bm17,
-			goneOnDate:date5a,
-			longTermRelationship:date5b,
-			beenContacted:date5c,
-			misrepresentedThemselves:date5d,
-			helpCreateProfile:date5e,
-			alreadyKnewMatch:date5f,
-			goodWayToMeet:date9a,
-			findBetterMatch:date9b,
-			desperate:date9c,
-			alwaysHaveNewOptions:date9d
-
-
+			goneOnDate:d.date5a,
+			longTermRelationship:d.date5b,
+			beenContacted:d.date5c,
+			misrepresentedThemselves:d.date5d,
+			helpCreateProfile:d.date5e,
+			alreadyKnewMatch:d.date5f,
+			goodWayToMeet:d.date9a,
+			findBetterMatch:d.date9b,
+			desperate:d.date9c,
+			alwaysHaveNewOptions:d.date9d
 		};
 	});
 });
