@@ -42,16 +42,18 @@ text.label {
 </div>
 	<div id="p2" style="display: inline-block; float: left"></div>
 	<div style="display: inline-block; vertical-align: top; position: relative" >
-		<div id="samp" style="position: absolute"></div>
-		<div id="samp2" style="position: absolute"></div>
-		<div id="samp3" style="position: absolute"></div>
-		<div id="samp4" style="position: absolute"></div>
+		<div id="hist" style="position: absolute"></div>
+		<div id="hist2" style="position: absolute"></div>
+		<div id="hist3" style="position: absolute"></div>
+		<div id="hist4" style="position: absolute"></div>
 	</div>
 
-<div id="histogram1"></div>
 
 <script>
 var teens = {};
+var teenSites = [];
+var numTeenBreakups = { onlineGood: 0, onlineBad: 0, notOnlineGood: 0, notOnlineBad: 0 };  
+var teenBreakups = [];
 var adults;
 
 // Splits the string into capitalized sites
@@ -80,8 +82,8 @@ var sanitizeSites = function (s) {
 
 // Load the data for online dating for teens
 d3.csv("teen_dating.csv", function(error, teenIds) {
-	teenIds
-	.forEach(function (teen) {
+	// Store all necessary, sanitized data for the teens
+	teenIds.forEach(function (teen) {
 		teens[teen.CaseID] = {
 			useOnlineDating: null,
 			site: sanitizeSites(teen.REL3),
@@ -112,7 +114,20 @@ d3.csv("teen_dating.csv", function(error, teenIds) {
 		} else {
 			teens[teen.CaseID].useOnlineDating = false;
 		}
-	}); 
+	});
+
+	// Extract all sanitized sites for teens who use online dating
+	for (var teenId in teens) {
+		var t = teens[teenId];
+		if (t.useOnlineDating) {
+			teenSites.push(t.site);
+
+			var method = t.yourBreakupMethod;
+			if (method.textEmailOnline) { teenBreakups["onlineBad"] += 1 }
+			// teenBreakups["onlineGood"]
+		}
+		
+	}
 });
 
 // Load the data for online dating for adults
@@ -155,10 +170,10 @@ d3.csv("adult_dating.csv", function (error, data){
 	});
 });
 
-d3.select("#samp").style("visibility", "hidden");
-d3.select("#samp2").style("visibility", "hidden");
-d3.select("#samp3").style("visibility", "hidden");
-d3.select("#samp4").style("visibility", "hidden");
+d3.select("#hist").style("visibility", "hidden");
+d3.select("#hist2").style("visibility", "hidden");
+d3.select("#hist3").style("visibility", "hidden");
+d3.select("#hist4").style("visibility", "hidden");
 var height = 300;
 var width = 300;
 var heart = String.fromCharCode(10084);
@@ -180,27 +195,27 @@ d3.select("#teens").on("click", function() {
 	teenBrokenHeart.style("opacity", "hidden");
 	adultHeart.style("visibility", "hidden");
 	adultBrokenHeart.style("visibility", "hidden");
-	d3.select("#samp").style("visibility", "hidden");
-		d3.select("#samp2").style("visibility", "hidden");
-	d3.select("#samp3").style("visibility", "hidden");
-	d3.select("#samp4").style("visibility", "hidden");
+	d3.select("#hist").style("visibility", "hidden");
+		d3.select("#hist2").style("visibility", "hidden");
+	d3.select("#hist3").style("visibility", "hidden");
+	d3.select("#hist4").style("visibility", "hidden");
 });
 
 d3.select("#teenHeart").on("click", function() {;
 	teenHeart.style("visibility", "hidden");
 		d3.select("#teenBrokenHeart").style("visibility", "visible");
-		d3.select("#samp").style("visibility", "visible");
-		d3.select("#samp2").style("visibility", "hidden");
-	d3.select("#samp3").style("visibility", "hidden");
-	d3.select("#samp4").style("visibility", "hidden");
+		d3.select("#hist").style("visibility", "visible");
+		d3.select("#hist2").style("visibility", "hidden");
+	d3.select("#hist3").style("visibility", "hidden");
+	d3.select("#hist4").style("visibility", "hidden");
 });
 d3.select("#teenBrokenHeart").on("click", function() {;
 	teenHeart.style("visibility", "visible");
 	teenBrokenHeart.style("visibility", "hidden");
-	d3.select("#samp").style("visibility", "hidden");
-	d3.select("#samp2").style("visibility", "visible");
-	d3.select("#samp3").style("visibility", "hidden");
-	d3.select("#samp4").style("visibility", "hidden");
+	d3.select("#hist").style("visibility", "hidden");
+	d3.select("#hist2").style("visibility", "visible");
+	d3.select("#hist3").style("visibility", "hidden");
+	d3.select("#hist4").style("visibility", "hidden");
 });
 
 d3.select("#adults").on("click", function() {
@@ -208,27 +223,27 @@ d3.select("#adults").on("click", function() {
 	teenBrokenHeart.style("opacity", "hidden");
 	adultHeart.style("visibility", "visible");
 	adultBrokenHeart.style("visibility", "hidden");
-	d3.select("#samp").style("visibility", "hidden");
-	d3.select("#samp2").style("visibility", "hidden");
-	d3.select("#samp3").style("visibility", "hidden");
-	d3.select("#samp4").style("visibility", "hidden");
+	d3.select("#hist").style("visibility", "hidden");
+	d3.select("#hist2").style("visibility", "hidden");
+	d3.select("#hist3").style("visibility", "hidden");
+	d3.select("#hist4").style("visibility", "hidden");
 
 });
 d3.select("#adultHeart").on("click", function() {;
 		adultHeart.style("visibility", "hidden");
 		adultBrokenHeart.style("visibility", "visible");
-		d3.select("#samp").style("visibility", "hidden");
-	d3.select("#samp2").style("visibility", "hidden");
-	d3.select("#samp3").style("visibility", "hidden");
-	d3.select("#samp4").style("visibility", "visible");
+		d3.select("#hist").style("visibility", "hidden");
+	d3.select("#hist2").style("visibility", "hidden");
+	d3.select("#hist3").style("visibility", "hidden");
+	d3.select("#hist4").style("visibility", "visible");
 });
 d3.select("#adultBrokenHeart").on("click", function() {;
 	adultHeart.style("visibility", "visible");
 	adultBrokenHeart.style("visibility", "hidden");
-	d3.select("#samp").style("visibility", "hidden");
-	d3.select("#samp2").style("visibility", "hidden");
-	d3.select("#samp3").style("visibility", "visible");
-	d3.select("#samp4").style("visibility", "hidden");
+	d3.select("#hist").style("visibility", "hidden");
+	d3.select("#hist2").style("visibility", "hidden");
+	d3.select("#hist3").style("visibility", "visible");
+	d3.select("#hist4").style("visibility", "hidden");
 });
 
 
@@ -281,14 +296,14 @@ function plotHistogram(strID, myG) {
 	svg.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", "axis").call(yAxis);
 }
 
-var sample = [3, 4, 5, 3, 7, 3, 5, 7, 3, 1, 4,5];
-var sample2 = [1, 1, 1, 1, 1, 3];
-var sample3 = [3, 4, 6, 3, 5, 6];
-var sample4 = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4];
-plotHistogram("#samp", sample);
-plotHistogram("#samp2", sample2);
-plotHistogram("#samp3", sample3);
-plotHistogram("#samp4", sample4);
+var histle =  	[3, 4, 5, 3, 7, 3, 5, 7, 3, 1, 4,5];
+var histle2 = [1, 1, 1, 1, 1, 3];
+var adultSites = [3, 4, 6, 3, 5, 6];
+var histle4 = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4];
+plotHistogram("#hist", histle);
+plotHistogram("#hist2", histle2);
+plotHistogram("#hist3", adultSites);
+plotHistogram("#hist4", histle4);
 
 </script>
 </body>
