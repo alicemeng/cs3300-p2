@@ -1,52 +1,52 @@
 State,Yes,No,Num_interviews
-District,of,Columbia,10.0%,88.0%,493
-Hawaii,5.1%,91.7%,643
-Vermont,4.9%,93.3%,664
-Oregon,4.9%,92.1%,3655
-Maine,4.8%,91.1%,1286
-Rhode,Island,4.5%,89.2%,735
-Massachusetts,4.4%,91.3%,4253
-South,Dakota,4.4%,92.1%,722
-Nevada,4.2%,92.2%,1493
-California,4.0%,91.9%,18636
-Washington,4.0%,92.6%,5990
-Kentucky,39%,92.4%,3415
-Arizona,3.9%,92.8%,4793
-New,York,3.8%,91.2%,9917
-Michigan,3.8%,92.1%,5913
-Illinois,3.8%,92.0%,7038
-New,Hampshire,3.7%,90.7%,1009
-New,Jersey,3.7%,91.3%,4999
-Indiana,3-796,91.9%,4947
-Kansas,3.7%,93.6%,2174
-Ohio,3.6%,92.5%,7543
-Georgia,3.5%,92.1%,6177
-Florida,3.5%,91.9%,11286
-Arkansas,3.5%,93.1%,2165
-Connecticut,3.496,93.5%,2306
-Delaware,3.4%,92.9%,668
-Oklahoma,3.4%,92.1%,3060
-Alaska,3.4%,93.8%,613
-Maryland,3.3%,93.0%,4195
-Missouri,3.3%,92.5%,4219
-North,Carolina,3.3%,91.8%,7175
-Texas,3.3%,92.4%,13314
-Iouisiana,3.2%,90.4%,2888
-Colorado,3.2%,93.2%,4400
-West,Virginia,3.1%,92.5%,1410
-Minnesota,2.9%,93.4%,4365
-Virginia,2.9%,92.7%,6323
-South,Carolina,2.9%,93.1%,3370
+"District of Columbia",10.0,88.0,493
+Hawaii,5.1,91.7,643
+Vermont,4.9,93.3,664
+Oregon,4.9,92.1,3655
+Maine,4.8,91.1,1286
+"Rhode Island",4.5,89.2,735
+Massachusetts,4.4,91.3,4253
+"South Dakota",4.4,92.1,722
+Nevada,4.2,92.2,1493
+California,4.0,91.9,18636
+Washington,4.0,92.6,5990
+Kentucky,39,92.4,3415
+Arizona,3.9,92.8,4793
+"New York",3.8,91.2,9917
+Michigan,3.8,92.1,5913
+Illinois,3.8,92.0,7038
+"New Hampshire",3.7,90.7,1009
+"New Jersey",3.7,91.3,4999
+Indiana,3-796,91.9,4947
+Kansas,3.7,93.6,2174
+Ohio,3.6,92.5,7543
+Georgia,3.5,92.1,6177
+Florida,3.5,91.9,11286
+Arkansas,3.5,93.1,2165
+Connecticut,3.496,93.5,2306
+Delaware,3.4,92.9,668
+Oklahoma,3.4,92.1,3060
+Alaska,3.4,93.8,613
+Maryland,3.3,93.0,4195
+Missouri,3.3,92.5,4219
+"North Carolina",3.3,91.8,7175
+Texas,3.3,92.4,13314
+Louisiana,3.2,90.4,2888
+Colorado,3.2,93.2,4400
+"West Virginia",3.1,92.5,1410
+Minnesota,2.9,93.4,4365
+Virginia,2.9,92.7,6323
+"South Carolina",2.9,93.1,3370
 Wyoming,2-996,933796,735
-New,Mexico,2.9%,93.1%,1861
-Wisconsin,2.8%,92.9%,4633
-Iowa,2.8%,93.4%,2692
-Alabama,2.8%,92.5%,3603
-Pennsylvania,2.7%,92.8%,9716
-Nebraska,2.7%,92.9%,592
-Idaho,2.7%,94.4%,1582
-Utah,2.7%,94.1%,2726
-Tennessee,2.6%,93.0%,4889
-Mississippi,2.6%,92.5%,1961
-Montana,2.6%,94.8%,1329
-North,Dakota,1.7%,93.7%,615
+"New Mexico",2.9,93.1,1861
+Wisconsin,2.8,92.9,4633
+Iowa,2.8,93.4,2692
+Alabama,2.8,92.5,3603
+Pennsylvania,2.7,92.8,9716
+Nebraska,2.7,92.9,592
+Idaho,2.7,94.4,1582
+Utah,2.7,94.1,2726
+Tennessee,2.6,93.0,4889
+Mississippi,2.6,92.5,1961
+Montana,2.6,94.8,1329
+"North Dakota",1.7,93.7,615

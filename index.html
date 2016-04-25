@@ -104,43 +104,49 @@ var stateNames = [];
 var states = {};
 
 d3.csv("education.csv", function (error, edStates) {
+	d3.csv("children.csv", function (error, childStates) {
+		d3.csv("income.csv", function (error, incomeStates) {
+			d3.csv("lgbt.csv", function (error, lgbtStates) {
 
-	d3.csv("children.csv", function(error, childStates) {
+				// Store income data by state
+				incomeStates.forEach(function (state) {
+					stateData[state.State] = {
+						FIPS: "",
+						income: state.Income,
+						children: 0,
+						education: {},
+						lgbt: 0
+					}
+					stateNames.push(state.State);
+				});
 
+				// Store children data by state
+				childStates.forEach(function (state) {
+					stateData[state.State].children = state.Avg_per_family;
+				});
 
-		d3.csv("income.csv", function(error, incomeStates) {
-			// Store income data by state
-			incomeStates.forEach(function (state) {
-				stateData[state.State] = {
-					FIPS: null,
-					income: state.Income,
-					children: null,
-					education: {}
-				}
-				stateNames.push(state.State);
-			});
+				// Store education attainment data by state
+				edStates.forEach(function (location) {
+					if (stateNames.indexOf(location["Area name"]) > -1) {
+						stateData[location["Area name"]].education = {
+							lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"],
+							HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"],
+							someCollege: location["Percent of adults completing some college or associate's degree, 2010-2014"],
+							bachelorsPlus: location["Percent of adults with a bachelor's degree or higher, 2010-2014"]
+						};
+						stateData[location["Area name"]].FIPS = location["FIPS Code"];
+					}
+				});
 
-			// Store children data by state
-			childStates.forEach(function (state) {
-				stateData[state.State]["children"] = state.Avg_per_family;
-			});
-
-			// Store education attainment data by state
-			edStates.forEach(function (location) {
-				if (stateNames.indexOf(location["Area name"]) > -1) {
-					stateData[location["Area name"]].education = {
-						lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"],
-						HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"],
-						someCollege: location["Percent of adults completing some college or associate's degree, 2010-2014"],
-						bachelorsPlus: location["Percent of adults with a bachelor's degree or higher, 2010-2014"]
-					};
-					stateData[location["Area name"]].FIPS = location["FIPS Code"];
-				}
+				// Store LGBT presence by state
+				lgbtStates.forEach(function (state) {
+					stateData[state.State].lgbt = state.Yes;
+				});
 			});
 		});
 	});
 });
-
+/*
 // Load the data for online dating for adults
 d3.csv("adult_dating.csv", function (error, data){
 	states = {
@@ -5761,7 +5767,7 @@ d3.csv("adult_dating.csv", function (error, data){
 	}
 });
 
-
+*/
 </script>
 </body>
 
