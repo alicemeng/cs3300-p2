@@ -6,7 +6,6 @@
 <style>
 body { font-family: 'Open Sans Condensed', 'sans-serif'; }
 svg { border: solid black 1px; }
-
 button { padding: 15px; margin: 10px;
 	font-family: 'Open Sans Condensed', 'sans-serif';
 	font-weight:700;
@@ -28,7 +27,6 @@ text.label {
 	font-size: x-small;
 	dominant-baseline: middle; 
 	text-anchor: middle;
-
 }
 text.stateHeader{
 	padding: 15px; margin: 10px;
@@ -60,14 +58,11 @@ text.stateHeader{
 	//state data
 	//all hidden 
 	var currStatePanel="#Alaska";
-
 	var svgMap = d3.select("#map").append("svg").attr("width",  700).attr("height", 500);
 	var svgPanel = d3.select("#panel").append("svg").attr("width",  0).attr("height", 500).style("visibility","visible").style("float", "left");
-
 	var projection = d3.geo.albersUsa().scale(860).translate([370, 250]);
 	var stateNames = ['', "Alabama", "Alaska", '', 'Arizona', 'Arkansas', 'California', '', 'Colorado ', 'Connecticut ', 'Delaware ', 'District of Columbia', 'Florida', 'Georgia ', '', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 
 	'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', '',  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont ', 'Virginia ', '', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-
 	for(var i=0; i< stateNames.length; i++){
 		if (stateNames[i] != ""){
 			var id = stateNames[i].replace(" ", "");
@@ -77,10 +72,8 @@ text.stateHeader{
 			svg.append("text").text(id).attr("x", 50).attr("y", 450);
 		}
 	}
-
 	d3.select("#Alaska").style("visibility", "visible");
 	var path = d3.geo.path().projection(projection);
-
 	d3.json("us.json", function(error, shapes) {
 		states = topojson.feature(shapes, shapes.objects.states).features;
 		console.log(states[0].id);
@@ -93,7 +86,6 @@ text.stateHeader{
 			var stateName = stateNames[states[i].id];
            	var id = "#" + stateName.replace(" ", "");
            	currStatePanel=id;
-
            	var svg = d3.select(id).style("visibility", "visible");
         })
 		.on('mouseover', function(d, i) {
@@ -105,7 +97,6 @@ text.stateHeader{
         });
 		
 	});
-
 </script>
 <script>
 var teens = {};
@@ -113,7 +104,6 @@ var teenSites = [];
 var numTeenBreakups = { onlineGood: 0, onlineBad: 0, notOnlineGood: 0, notOnlineBad: 0 };  
 var teenBreakups = [];
 var adults;
-
 // Splits the string into capitalized sites
 var sanitizeSites = function (s) {
 	if (s) {
@@ -124,7 +114,6 @@ var sanitizeSites = function (s) {
 		});
 		if (s.indexOf("FB") > -1 || s.indexOf("facebiij") > -1) s = "Facebook";
 		if (s == "Gram") s = "Instagram";
-
 		// Split
 		var sites = s == " " ? [] : s.toUpperCase().replace("AND", ",").split(",");
 		sites = sites.map( function (site) {
@@ -137,7 +126,6 @@ var sanitizeSites = function (s) {
 	}
 	
 };
-
 // Load the data for online dating for teens
 d3.csv("teen_dating.csv", function(error, teenIds) {
 	// Store all necessary, sanitized data for the teens
@@ -173,13 +161,11 @@ d3.csv("teen_dating.csv", function(error, teenIds) {
 			teens[teen.CaseID].useOnlineDating = false;
 		}
 	});
-
 	// Extract all sanitized sites for teens who use online dating
 	for (var teenId in teens) {
 		var t = teens[teenId];
 		if (t.useOnlineDating) {
 			teenSites.push(t.site);
-
 			var method = t.yourBreakupMethod;
 			if (method.textEmailOnline) { teenBreakups["onlineBad"] += 1 }
 			// teenBreakups["onlineGood"]
@@ -187,49 +173,5625 @@ d3.csv("teen_dating.csv", function(error, teenIds) {
 		
 	}
 });
-
 // Load the data for online dating for adults
 d3.csv("adult_dating.csv", function (error, data){
-	adults=data.filter(function (d){
-		return{
-			blocked: d.snsdate2a,
-			untagged: d.snsdate2c,
-			breakup: d.breaka,
-			brokenup: d.breakb,
-			usedDatingSite: d.date1a,
-			match: d.date1bm1,
-			eharmony:d.date1bm2,
-			okcupid: d.date1bm3,
-			plentyOfFish: d.date1bm4,
-			christianMingle: d.date1bm5,
-			true: d.date1bm6,
-			zoosk:d.date1bm7,
-			jdate:d.date1bm8,
-			dateHookup:d.date1bm9,
-			ashleyMadison:d.date1bm10,
-			facebook:d.date1bm11,
-			twitter:d.date1bm12,
-			adultFriendFinder:d.date1bm13,
-			blackplanet:d.date1bm14,
-			chemistry:d.date1bm15,
-			craigslist:d.date1bm16,
-			other:d.date1bm17,
-			goneOnDate:d.date5a,
-			longTermRelationship:d.date5b,
-			beenContacted:d.date5c,
-			misrepresentedThemselves:d.date5d,
-			helpCreateProfile:d.date5e,
-			alreadyKnewMatch:d.date5f,
-			goodWayToMeet:d.date9a,
-			findBetterMatch:d.date9b,
-			desperate:d.date9c,
-			alwaysHaveNewOptions:d.date9d
-		};
-	});
+	states = {
+		Alabama:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==1){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Alaska:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==2){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Arizona:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==4){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Arkansas:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==5){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		California:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==6){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Colorado:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==8){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Connecticut:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==9){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		DC:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==11){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Delaware:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==10){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Florida:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==12){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Georgia:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==13){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Hawaii:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==15){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Idaho:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==16){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Illinois:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==17){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+
+		}
+
+		Indiana:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==18){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Iowa:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==19){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Kansas:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==20){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Kentucky:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==21){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Louisiana:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==22){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+
+		}
+
+		Maine:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==23){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+
+		}
+
+		Maryland:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==24){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Massachusetts:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==25){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Michigan:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==26){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Minnesota:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==27){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Mississippi:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==28){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Missouri:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==29){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Montana:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==30){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Nebraska:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==31){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+
+		}
+
+		Nevada:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==32){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		NewHampshire:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==33){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		NewJersey:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==34){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+
+		}
+
+		NewMexico:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==35){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		NewYork:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==36){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		NorthCarolina:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==37){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		NorthDakota:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==38){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Ohio:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==39){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Oklahoma:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==40){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Oregon:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==41){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Pennsylvania:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==42){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		RhodeIsland:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==44){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		SouthCarolina:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==45){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		SouthDakota:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==46){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Tennessee:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==47){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Texas:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==48){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Utah:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==49){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Vermont:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==50){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Virginia:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==51){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Washington:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==53){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		WestVirginia:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==54){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Wisconsin:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==55){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+
+		Wyoming:{
+			var user_list=[];
+			data.forEach(function (adult){
+				if(adult.state==56){
+					user_list.push(adult.psraid:{
+						sites:{
+							for(var i=1;i<=5;i++){
+								var col="date1bm"+i.toString();
+								if(adult.col==1){
+									match:adult.col,
+								}
+
+								else if(adult.col==2){
+									eharmony:adult.col,
+								}
+
+								else if(adult.col==3){
+									okcupid:adult.col,
+								}
+
+								else if(adult.col==4){
+									plentyOfFish:adult.col,
+								}
+
+								else if(adult.col==5){
+									christianMingle:adult.col,
+								}
+
+								else if(adult.col==6){
+									true:adult.col,
+								}
+
+								else if(adult.col==7){
+									zoosk:adult.col,
+								}
+
+								else if(adult.col==8){
+									jdate:adult.col,
+								}
+
+								else if(adult.col==9){
+									dateHookup:adult.col,
+								}
+
+								else if(adult.col==10){
+									ashleyMadison:adult.col,
+								}
+
+								else if(adult.col==11){
+									facebook:adult.col,
+								}
+
+								else if(adult.col==12){
+									twitter:adult.col,
+								}
+
+								else if(adult.col==13){
+									adultFriendFinder:adult.col,
+								}
+
+								else if(adult.col==14){
+									blackplanet:adult.col,
+								}
+
+								else if(adult.col==15){
+									chemistry:adult.col,
+								}
+
+								else if(adult.col==16){
+									craigslist:adult.col,
+								}
+
+								else{
+									if(adult.col!=null){
+										other:adult.col
+									}
+								}
+							}
+						},
+
+						income:if(adult.inc!=98&&adult.inc!=99){
+							adult.inc,
+						}
+
+						numberOfChildren:if(adult.qd2b1!=null&&adult.qd2b1!=98&&adult.qd2b1!=99&&
+							adult.qd2b2!=null&&adult.qd2b2!=98&&adult.qd2b2!=99&&
+							adult.qd2c!=null&&adult.qd2c!=98&&adult.qd2c!=99&&){
+							adult.qd2b1+adult.qd2b2+adult.qd2c,
+						}
+
+						educationLevel:if(adult.educ2!=98&&adult.educ2!=99){
+							{
+								lessThanHS: adult.educ2==1||adult.educ2==2,
+								HSDiploma: adult.educ2==3,
+								someCollege: adult.educ2 == 4 || adult.educ2 == 5,
+								bachelorsPlus: adult.educ2 == 6 || adult.educ2 == 7 || adult.educ2 == 8
+							},
+						}
+
+						lgbt: if(adult.lgbt!=8&&adult.lgbt!=9){
+							{
+								straight: adult.lgbt==1,
+								lgbtq: adult.lgbt==2 || adult.lgbt==3 || adult.lgbt == 4
+							}
+						}
+					});
+				}
+			});
+		}
+	}
 });
-
-
-
 </script>
 </body>
 
