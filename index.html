@@ -100,7 +100,8 @@ text.stateHeader{
 
 var adults;
 var stateData = {};
-var states = [];
+var stateNames = [];
+var states = {};
 
 d3.csv("education.csv", function (error, edStates) {
 
@@ -116,7 +117,7 @@ d3.csv("education.csv", function (error, edStates) {
 					children: null,
 					education: {}
 				}
-				states.push(state.State);
+				stateNames.push(state.State);
 			});
 
 			// Store children data by state
@@ -126,7 +127,7 @@ d3.csv("education.csv", function (error, edStates) {
 
 			// Store education attainment data by state
 			edStates.forEach(function (location) {
-				if (states.indexOf(location["Area name"]) > -1) {
+				if (stateNames.indexOf(location["Area name"]) > -1) {
 					stateData[location["Area name"]].education = {
 						lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"],
 						HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"],
@@ -139,7 +140,7 @@ d3.csv("education.csv", function (error, edStates) {
 		});
 	});
 });
-/*
+
 // Load the data for online dating for adults
 d3.csv("adult_dating.csv", function (error, data){
 	states = {
@@ -5760,7 +5761,7 @@ d3.csv("adult_dating.csv", function (error, data){
 	}
 });
 
-*/
+
 </script>
 </body>
 
