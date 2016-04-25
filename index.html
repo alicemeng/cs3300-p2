@@ -1,6 +1,7 @@
 <html>
 <head>
 <script charset="utf-8" src="http://d3js.org/d3.v3.min.js"></script>
+	<script src="http://d3js.org/topojson.v1.min.js"></script>
 <link href='https://fonts.googleapis.com/css?family=Open+Sans+Condensed:300,700' rel='stylesheet' type='text/css'>
 <style>
 body { font-family: 'Open Sans Condensed', 'sans-serif'; }
@@ -35,20 +36,44 @@ text.label {
 <body>
 	<h1>Online Dating</h1>
 	<p>Instructions: Select either 'Teens' or 'Adults' to learn about statistics involving the selected group and online dating habits </p>
+<div style="display: inline-block; vertical-align:center; float:left; padding: 30px">
+	<div><button style="display: inline-block; " id="reset">Reset</button></div>
+	<div><button style="display: inline-block;" id="income">Income</button></div>
 	<div>
-	<button id="home">Home</button>
-	<button id="teens" class="tButton tSelect">Teens</button>
-	<button id= "adults" class= "aButton aSelect">Adults</button>
+	<button style="display: inline-block; text-align:center" id="education" class="tButton tSelect">Education</button></div>
+	<div><button style="display: inline-block;" id= "adults" class= "aButton aSelect">Children</button></div>
 </div>
-	<div id="p2" style="display: inline-block; float: left"></div>
-	<div style="display: inline-block; vertical-align: top; position: relative" >
-		<div id="hist" style="position: absolute"></div>
-		<div id="hist2" style="position: absolute"></div>
-		<div id="hist3" style="position: absolute"></div>
-		<div id="hist4" style="position: absolute"></div>
-	</div>
+<div id="map" style="display: inline-block;"></div>
+<div id = "panel" style="display: inline-block;"></div>
 
+<script>
+	var svgMap = d3.select("#map").append("svg").attr("width",  700).attr("height", 500);
+	var svgPanel = d3.select("#panel").append("svg").attr("width",  250).attr("height", 500);
 
+	var projection = d3.geo.albersUsa().scale(860).translate([370, 250]);
+
+	var path = d3.geo.path().projection(projection);
+
+	d3.json("us.json", function(error, shapes) {
+		states = topojson.feature(shapes, shapes.objects.states).features;
+
+		var statePaths = svgMap.append("g");
+		statePaths.selectAll("path").data(states).enter()
+		.append("path").attr("d", path)
+		.style("fill", "red").style("stroke", "#ccc")
+		.on('click', function(d, i) {
+            svgPanel.append("text").text("here");
+        })
+		.on('mouseover', function(d, i) {
+                var currentState = this;
+                d3.select(this).style('fill-opacity', 1);
+        })
+		.on('mouseout', function(d, i) {
+            d3.selectAll('path').style({'fill-opacity':.7});
+        });
+	});
+
+</script>
 <script>
 var teens = {};
 var teenSites = [];
@@ -170,140 +195,7 @@ d3.csv("adult_dating.csv", function (error, data){
 	});
 });
 
-d3.select("#hist").style("visibility", "hidden");
-d3.select("#hist2").style("visibility", "hidden");
-d3.select("#hist3").style("visibility", "hidden");
-d3.select("#hist4").style("visibility", "hidden");
-var height = 300;
-var width = 300;
-var heart = String.fromCharCode(10084);
-var brokenHeart = '\uD83D\uDC94';
-var svg = d3.select("#p2").append("svg").attr("height", height).attr("width", width);
-svg.append("text").html(heart).attr("x", 30).attr("y", 200).style("font-size", "100px" ).style("fill", "red" ).attr("id", "teenHeart").style("visibility", "hidden");
-svg.append("text").html(brokenHeart).attr("x", 30).attr("y", 200).style("font-size", "100px" ).style("fill", "red" ).attr("id", "teenBrokenHeart").style("visibility", "hidden");
-svg.append("text").text(" " +heart).attr("x", 30).attr("y", 200).style("font-size", "100px" ).style("fill", "red" ).attr("id", "adultHeart").style("visibility", "hidden");
-svg.append("text").text(" " + brokenHeart).attr("x", 30).attr("y", 200).style("font-size", "100px" ).style("fill", "red" ).attr("id", "adultBrokenHeart").style("visibility", "hidden");
 
-
-var teenHeart = d3.select("#teenHeart");
-var teenBrokenHeart = d3.select("#teenBrokenHeart");
-var adultHeart = d3.select("#adultHeart");
-var adultBrokenHeart = d3.select("#adultBrokenHeart");
-
-d3.select("#teens").on("click", function() {
-	teenHeart.style("visibility", "visible");
-	teenBrokenHeart.style("opacity", "hidden");
-	adultHeart.style("visibility", "hidden");
-	adultBrokenHeart.style("visibility", "hidden");
-	d3.select("#hist").style("visibility", "hidden");
-		d3.select("#hist2").style("visibility", "hidden");
-	d3.select("#hist3").style("visibility", "hidden");
-	d3.select("#hist4").style("visibility", "hidden");
-});
-
-d3.select("#teenHeart").on("click", function() {;
-	teenHeart.style("visibility", "hidden");
-		d3.select("#teenBrokenHeart").style("visibility", "visible");
-		d3.select("#hist").style("visibility", "visible");
-		d3.select("#hist2").style("visibility", "hidden");
-	d3.select("#hist3").style("visibility", "hidden");
-	d3.select("#hist4").style("visibility", "hidden");
-});
-d3.select("#teenBrokenHeart").on("click", function() {;
-	teenHeart.style("visibility", "visible");
-	teenBrokenHeart.style("visibility", "hidden");
-	d3.select("#hist").style("visibility", "hidden");
-	d3.select("#hist2").style("visibility", "visible");
-	d3.select("#hist3").style("visibility", "hidden");
-	d3.select("#hist4").style("visibility", "hidden");
-});
-
-d3.select("#adults").on("click", function() {
-	teenHeart.style("visibility", "hidden");
-	teenBrokenHeart.style("opacity", "hidden");
-	adultHeart.style("visibility", "visible");
-	adultBrokenHeart.style("visibility", "hidden");
-	d3.select("#hist").style("visibility", "hidden");
-	d3.select("#hist2").style("visibility", "hidden");
-	d3.select("#hist3").style("visibility", "hidden");
-	d3.select("#hist4").style("visibility", "hidden");
-
-});
-d3.select("#adultHeart").on("click", function() {;
-		adultHeart.style("visibility", "hidden");
-		adultBrokenHeart.style("visibility", "visible");
-		d3.select("#hist").style("visibility", "hidden");
-	d3.select("#hist2").style("visibility", "hidden");
-	d3.select("#hist3").style("visibility", "hidden");
-	d3.select("#hist4").style("visibility", "visible");
-});
-d3.select("#adultBrokenHeart").on("click", function() {;
-	adultHeart.style("visibility", "visible");
-	adultBrokenHeart.style("visibility", "hidden");
-	d3.select("#hist").style("visibility", "hidden");
-	d3.select("#hist2").style("visibility", "hidden");
-	d3.select("#hist3").style("visibility", "visible");
-	d3.select("#hist4").style("visibility", "hidden");
-});
-
-
-function plotHistogram(strID, myG) {
-	//x-axis variables
-	var myMax = d3.max(myG);
-	var myMin = d3.min(myG);
-
-	var binCounter = d3.layout.histogram().bins(10).range([myMin, myMax]); //y axis
-	var uniformBins = binCounter(myG);
-
-	var bins = uniformBins;
-		
-	height = 300;
-	width = 400;
-	padding = 50;
-	var svg = d3.select(strID).append("svg")
-	.attr("height", height).attr("width", width);
-
-	var xBands = d3.scale.ordinal()
-		.domain(bins.map(function (bin) {
-		 	return bin.x;
-	 	}))
-		.rangeBands([padding, width-padding], 0.1);
-	
-	var xScale = d3.scale.ordinal().domain(bins.map(function (bin) {
-        	return d3.round(bin.x, 2);
-        }))
-	.rangeBands([padding, width-padding], 0.1);
-	
-	var yScale = d3.scale.linear()
-		.domain([0, d3.max(bins, function(bin) {return bin.y; })])
-		.range([height - padding, padding]);
-
-	bins.forEach(function (bin) {
-		svg.append("rect").attr("class", "bar")
-		.attr("x", xBands(bin.x))
-		.attr("y", yScale(bin.y))
-		.attr("width", xBands.rangeBand())
-		.attr("height", (yScale(0) - yScale(bin.y)));
-	});
-
-	var yAxis = d3.svg.axis().scale(yScale)
-	.orient("left");
-
-	var xAxis = d3.svg.axis().scale(xScale).orient("bottom");
-
-	svg.append("g").attr("transform", "translate(0," + (height - padding) + ")").attr("class", "axis").call(xAxis);		
-
-	svg.append("g").attr("transform", "translate(" + padding + ",0)").attr("class", "axis").call(yAxis);
-}
-
-var histle =  	[3, 4, 5, 3, 7, 3, 5, 7, 3, 1, 4,5];
-var histle2 = [1, 1, 1, 1, 1, 3];
-var adultSites = [3, 4, 6, 3, 5, 6];
-var histle4 = [1, 2, 2, 3, 3, 3, 4, 4, 4, 4];
-plotHistogram("#hist", histle);
-plotHistogram("#hist2", histle2);
-plotHistogram("#hist3", adultSites);
-plotHistogram("#hist4", histle4);
 
 </script>
 </body>
