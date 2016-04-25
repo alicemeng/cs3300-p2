@@ -132,12 +132,13 @@ div.hoverLabel {
 			svg.append("text").text(mystateNames[i]).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
 			svg.append("svg").attr("width", 50).attr("height", 50);
 			svg.append("text").text(28).attr("x", 30).attr("y", 330).attr("class", "posNumber");
-			svg.append("text").text("%").attr("x", 45).attr("y", 330).attr("class", "posPercent");
-			svg.append("text").text(" met a significant other or long-term relationship online").attr("x", 60).attr("y", 330).attr("class", "posText");
+			svg.append("text").text("%").attr("x", 75).attr("y", 330).attr("class", "posPercent");
+			svg.append("text").text(" met a significant other online ").attr("x", 120).attr("y", 325).attr("class", "posText");
+			
 
 			svg.append("text").text(42).attr("x", 30).attr("y", 400).attr("class", "negNumber");
-			svg.append("text").text("%").attr("x", 45).attr("y", 400).attr("class", "negPercent");
-			svg.append("text").text(" have broken up with their partner by changing their status to single").attr("x", 60).attr("y", 400).attr("class", "negText");
+			svg.append("text").text("%").attr("x", 75).attr("y", 400).attr("class", "negPercent");
+			svg.append("text").text(" have broken up with their partner by changing their status to single").attr("x", 80).attr("y", 400).attr("class", "negText");
 		}
 	}
 
@@ -164,22 +165,22 @@ div.hoverLabel {
            	d3.select(this).style('fill-opacity', 1);
         })
 		.on('mouseover', function(d, i) {
-                var currentState = this;
-                var stateName = mystateNames[states[i].id];
-                d3.select(this).style('fill-opacity', 1);
-                div.transition()        
-      	   .duration(200)      
-           .style("opacity", .9); 
-           var inner = 28 + "%" + " of "+stateName+ " residents use online dating";   
-           div.text(inner)
-           .style("left", (d3.event.pageX) + "px")     
-           .style("top", (d3.event.pageY - 28) + "px");  
-                })
+        	var currentState = this;
+            var stateName = mystateNames[states[i].id];
+            d3.select(this).style('fill-opacity', 1);
+            div.transition()        
+	      	   	.duration(200)      
+    	       	.style("opacity", .9); 
+           	var inner = 28 + "%" + " of "+stateName+ " residents use online dating";   
+           	div.text(inner)
+           		.style("left", (d3.event.pageX) + "px")     
+           		.style("top", (d3.event.pageY - 28) + "px");  
+        })
 		.on('mouseout', function(d, i) {
             d3.selectAll('path').style({'fill-opacity':.7});
-                div.transition()        
-           .duration(500)      
-           .style("opacity", 0);
+            div.transition()        
+           		.duration(500)      
+           		.style("opacity", 0);
         });
 		
 	});
