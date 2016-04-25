@@ -6,27 +6,69 @@
 <style>
 body { font-family: 'Open Sans Condensed', 'sans-serif'; }
 svg { border: solid black 1px; }
+hearts {font-size: 20px; fill: "red";}
 button { padding: 15px; margin: 10px;
 	font-family: 'Open Sans Condensed', 'sans-serif';
 	font-weight:700;
-	width: 120;
+	width: 130;
 	color: white;
-	background-color: #ff4d4d;
+	
 	text-transform: uppercase;
 	letter-spacing: 2px;
-	padding: 10px 30px;
+	padding: 10px 20px;
 	border-radius: 5px;
-	font-size: 16px;
-	border: solid red 1px;}
-		.axis path { fill: none; stroke: #aaa;}
-	.axis line { stroke: #aaa; }
-	.axis text { fill: #aaa; font-size: .7em; }
+	font-size: 16px;}
+button.reset {
+	background-color: #ff4d4d;
+	border: solid red 1px;
+}
+button.income {
+	background-color: #668cff;
+	border: solid blue 1px;
+}
+button.edu {
+	background-color: #ff8533;
+	border: solid orange 1px;
+}
+button.children{
+	background-color: #33ff33;
+	border: solid green 1px;
+}
+text.posNumber {
+	fill:  #00b359;
+	font-size: 50px;
+	font-weight: 700;
+}
+text.posPercent {
+	fill:  #00cca3;
+	font-size: 50px;
+	font-weight: 700;
+}
+text.negNumber {
+	fill:  #4d194d;
+	font-size: 50px;
+	font-weight: 700;
+}
+text.negPercent {
+	fill:  #4d194d;
+	font-size: 50px;
+	font-weight: 700;
+}
+text.posText {
+	font-weight: 500;
+	width: 100;
+	height: 100;
+}
+.axis path { fill: none; stroke: #aaa;}
+.axis line { stroke: #aaa; }
+.axis text { fill: #aaa; font-size: .7em; }
 rect.bar { fill: #cc0000;; }
 text.label {
 	fill: #888;
 	font-size: x-small;
 	dominant-baseline: middle; 
 	text-anchor: middle;
+
 }
 text.stateHeader{
 	padding: 15px; margin: 10px;
@@ -38,6 +80,20 @@ text.stateHeader{
 	text-transform: uppercase;
 	text-align: center;
 }
+div.hoverLabel {   
+ 	position: absolute;           
+	text-align: center;           
+	width: 90px;                  
+	height: 50px;                 
+	padding: 2px;             
+	font: 12px sans-serif;        
+	background: #aaa;   
+	opacity: .7
+	border: 0px;      
+	border-radius: 5px;           
+	pointer-events: none;         
+}
+
 </style>
 </head>
 
@@ -45,35 +101,49 @@ text.stateHeader{
 	<h1>Online Dating</h1>
 	<p>Instructions: Select either 'Teens' or 'Adults' to learn about statistics involving the selected group and online dating habits </p>
 <div style="display: inline-block; vertical-align:center; float:left; padding: 30px">
-	<div><button style="display: inline-block; " id="reset">Reset</button></div>
-	<div><button style="display: inline-block;" id="income">Income</button></div>
+	<div><button class="reset" style="display: inline-block; " id="reset">Reset</button></div>
+	<div><button class="income" style="display: inline-block;" id="income">Income</button></div>
 	<div>
-	<button style="display: inline-block; text-align:center" id="education" class="tButton tSelect">Education</button></div>
-	<div><button style="display: inline-block;" id= "adults" class= "aButton aSelect">Children</button></div>
+	<button class="edu" style="display: inline-block; text-align:center" id="education">Education</button></div>
+	<div><button class = "children" style="display: inline-block;" id= "children">Children</button></div>
 </div>
 <div id="map" style="display: inline-block;"></div>
 <div id = "panel" style="display: inline-block;"></div>
 
 <script>
-	//state data
-	//all hidden 
 	var currStatePanel="#Alaska";
+
 	var svgMap = d3.select("#map").append("svg").attr("width",  700).attr("height", 500);
 	var svgPanel = d3.select("#panel").append("svg").attr("width",  0).attr("height", 500).style("visibility","visible").style("float", "left");
+
 	var projection = d3.geo.albersUsa().scale(860).translate([370, 250]);
-	var stateNames = ['', "Alabama", "Alaska", '', 'Arizona', 'Arkansas', 'California', '', 'Colorado ', 'Connecticut ', 'Delaware ', 'District of Columbia', 'Florida', 'Georgia ', '', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 
+	var mystateNames = ['', "Alabama", "Alaska", '', 'Arizona', 'Arkansas', 'California', '', 'Colorado ', 'Connecticut ', 'Delaware ', 'District of Columbia', 'Florida', 'Georgia ', '', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 
 	'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', '',  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont ', 'Virginia ', '', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-	for(var i=0; i< stateNames.length; i++){
-		if (stateNames[i] != ""){
-			var id = stateNames[i].replace(" ", "");
+
+	var div = d3.select("#map")
+		    .append("div")   
+    		.attr("class", "hoverLabel")               
+    		.style("opacity", 0);
+
+	for(var i=0; i< mystateNames.length; i++){
+		if (mystateNames[i] != " "){
+			var id = mystateNames[i].replace(" ", "");
 			var svg = d3.select("#panel").append("svg").attr("width",  300).attr("height", 500).style("visibility","hidden").style("position", "absolute").attr("id", id);
-			svg.append("text").text(stateNames[i]).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
+			svg.append("text").text(mystateNames[i]).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
 			svg.append("svg").attr("width", 50).attr("height", 50);
-			svg.append("text").text(id).attr("x", 50).attr("y", 450);
+			svg.append("text").text(28).attr("x", 30).attr("y", 330).attr("class", "posNumber");
+			svg.append("text").text("%").attr("x", 45).attr("y", 330).attr("class", "posPercent");
+			svg.append("text").text(" met a significant other or long-term relationship online").attr("x", 60).attr("y", 330).attr("class", "posText");
+
+			svg.append("text").text(42).attr("x", 30).attr("y", 400).attr("class", "negNumber");
+			svg.append("text").text("%").attr("x", 45).attr("y", 400).attr("class", "negPercent");
+			svg.append("text").text(" have broken up with their partner by changing their status to single").attr("x", 60).attr("y", 400).attr("class", "negText");
 		}
 	}
-	d3.select("#Alaska").style("visibility", "visible");
+
+	d3.select("#Alaska").style("visibility", "hidden");
 	var path = d3.geo.path().projection(projection);
+
 	d3.json("us.json", function(error, shapes) {
 		states = topojson.feature(shapes, shapes.objects.states).features;
 		console.log(states[0].id);
@@ -83,20 +153,39 @@ text.stateHeader{
 		.style("fill", "red").style("stroke", "#ccc")
 		.on('click', function(d, i) {
 			d3.select(currStatePanel).style("visibility", "hidden");
-			var stateName = stateNames[states[i].id];
+			console.log(states[i].id);
+			console.log(stateNames[0]);
+			console.log(stateNames[states[i].id])
+			var stateName = mystateNames[states[i].id];
            	var id = "#" + stateName.replace(" ", "");
            	currStatePanel=id;
+
            	var svg = d3.select(id).style("visibility", "visible");
+           	d3.select(this).style('fill-opacity', 1);
         })
 		.on('mouseover', function(d, i) {
                 var currentState = this;
+                var stateName = mystateNames[states[i].id];
                 d3.select(this).style('fill-opacity', 1);
+                div.transition()        
+      	   .duration(200)      
+           .style("opacity", .9); 
+           var inner = 28 + "%" + " of "+stateName+ " residents use online dating";   
+           div.text(inner)
+           .style("left", (d3.event.pageX) + "px")     
+           .style("top", (d3.event.pageY - 28) + "px");  
                 })
 		.on('mouseout', function(d, i) {
             d3.selectAll('path').style({'fill-opacity':.7});
+                div.transition()        
+           .duration(500)      
+           .style("opacity", 0);
         });
 		
 	});
+
+
+
 
 var adults;
 var stateData = {};
