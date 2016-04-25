@@ -97,82 +97,49 @@ text.stateHeader{
         });
 		
 	});
-</script>
-<script>
-var teens = {};
-var teenSites = [];
-var numTeenBreakups = { onlineGood: 0, onlineBad: 0, notOnlineGood: 0, notOnlineBad: 0 };  
-var teenBreakups = [];
+
 var adults;
-// Splits the string into capitalized sites
-var sanitizeSites = function (s) {
-	if (s) {
-		// Filter out invalid responses and correct misspelled ones
-		var invalids = ["non of ya dam biz", "I forget the name", ",,,,,,", "1", "0", "na"];
-		invalids.forEach( function (invalid) {
-			if (s.indexOf(invalid) > -1) s = " ";
+var stateData = {};
+var states = [];
+
+d3.csv("education.csv", function (error, edStates) {
+
+	d3.csv("children.csv", function(error, childStates) {
+
+
+		d3.csv("income.csv", function(error, incomeStates) {
+			// Store income data by state
+			incomeStates.forEach(function (state) {
+				stateData[state.State] = {
+					FIPS: null,
+					income: state.Income,
+					children: null,
+					education: {}
+				}
+				states.push(state.State);
+			});
+
+			// Store children data by state
+			childStates.forEach(function (state) {
+				stateData[state.State]["children"] = state.Avg_per_family;
+			});
+
+			// Store education attainment data by state
+			edStates.forEach(function (location) {
+				if (states.indexOf(location["Area name"]) > -1) {
+					stateData[location["Area name"]].education = {
+						lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"],
+						HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"],
+						someCollege: location["Percent of adults completing some college or associate's degree, 2010-2014"],
+						bachelorsPlus: location["Percent of adults with a bachelor's degree or higher, 2010-2014"]
+					};
+					stateData[location["Area name"]].FIPS = location["FIPS Code"];
+				}
+			});
 		});
-		if (s.indexOf("FB") > -1 || s.indexOf("facebiij") > -1) s = "Facebook";
-		if (s == "Gram") s = "Instagram";
-		// Split
-		var sites = s == " " ? [] : s.toUpperCase().replace("AND", ",").split(",");
-		sites = sites.map( function (site) {
-			return site.replace("WWW.", "").replace(".COM", "").trim();
-		});
-	
-		return sites;
-	} else {
-		return [];
-	}
-	
-};
-// Load the data for online dating for teens
-d3.csv("teen_dating.csv", function(error, teenIds) {
-	// Store all necessary, sanitized data for the teens
-	teenIds.forEach(function (teen) {
-		teens[teen.CaseID] = {
-			useOnlineDating: null,
-			site: sanitizeSites(teen.REL3),
-			acceptableBreakup: {
-				text: teen.KR10_1,
-				inPerson: teen.KR10_2,
-				onlineMessage: teen.KR10_4,
-				statusChange: teen.KR10_6
-			},
-			yourBreakupMethod: {
-				inPerson: teen.KR11_B == 1,
-				textEmailOnline: teen.KR11_C == 1 || teen.KR11_D == 1 || teen.KR11_E == 1,
-				statusChange: teen.KR11_F == 1,
-				postStatus: teen.KR11_G == 1,
-				postImage: teen.KR11_H == 1
-			},
-			theirBreakupMethod: {
-				inPerson: teen.KR12_B == 1,
-				textEmailOnline: teen.KR12_C == 1 || teen.KR12_D == 1 || teen.KR12_E == 1,
-				statusChange: teen.KR12_F == 1,
-				postStatus: teen.KR12_G == 1,
-				postImage: teen.KR12_H == 1
-			},
-			unsocialEx: teen.KRSNS4_A == 1 || teen.KRSNS4_C == 1
-		};
-		if (teen.KR1 == 2 || teen.KR1 == 3 || teen.KR1 == 4) {
-			teens[teen.CaseID].useOnlineDating = true;
-		} else {
-			teens[teen.CaseID].useOnlineDating = false;
-		}
 	});
-	// Extract all sanitized sites for teens who use online dating
-	for (var teenId in teens) {
-		var t = teens[teenId];
-		if (t.useOnlineDating) {
-			teenSites.push(t.site);
-			var method = t.yourBreakupMethod;
-			if (method.textEmailOnline) { teenBreakups["onlineBad"] += 1 }
-			// teenBreakups["onlineGood"]
-		}
-		
-	}
 });
+/*
 // Load the data for online dating for adults
 d3.csv("adult_dating.csv", function (error, data){
 	states = {
@@ -5792,6 +5759,8 @@ d3.csv("adult_dating.csv", function (error, data){
 		}
 	}
 });
+
+*/
 </script>
 </body>
 
