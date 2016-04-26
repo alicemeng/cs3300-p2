@@ -293,7 +293,9 @@ d3.csv("education.csv", function (error, edStates) {
 								children: 0,
 								education: {},
 								lgbt: 0,
-								userList: []
+								userList: [],
+								metPercentage:0,
+								breakupPercentage:0							
 							}
 							stateNames.push(state.State);
 						});
@@ -334,11 +336,28 @@ d3.csv("education.csv", function (error, edStates) {
 									someCollege: user.educ2 == 4 || user.educ2 == 5,
 									bachelorsPlus: user.educ2 == 6 || user.educ2 == 7 || user.educ2 == 8
 								},
-								lgbt: user.lgbt==2 || user.lgbt==3 || user.lgbt == 4
+								lgbt: user.lgbt==2 || user.lgbt==3 || user.lgbt == 4,
+								metPartnerOnline: user.rel1 == 1,
+								electronicBreakup: user.breaka==1||user.breakb==1
 	
 							};
 							stateData[state].userList.push(userData);
 						});
+
+						for(state in stateData){
+							var metOnline=0;
+							var eBreakup=0;
+							var length=0;
+							for(user in state.userList){
+								if(user.metPartnerOnline){metOnline++;}
+								if(user.electronicBreakup){eBreakup++;}
+								length++;
+							}
+							var percentMet=(metOnline/length)*100;
+							var percentBroken=(eBreakup/length)*100;
+							stateData[state].metPercentage=percentMet;
+							stateData[state].breakupPercentage=percentBroken;
+						}
 					});
 				});
 			});
