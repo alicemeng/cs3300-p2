@@ -1,6 +1,7 @@
 Sources:
 
-LGBTQ by state: www.gallup.com/poll/160517/lgbt-percentage-highest-lowest-north-dakota.aspx
-Median household income by state: http://kff.org/other/state-indicator/median-annual-income/
-Children per family by state: https://www.census.gov/population/socdemo/hh-fam/tabST-F1-2000.pdf
-Education level by state: http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/Education.xls
+LGBT presence by state (lgbt.csv): www.gallup.com/poll/160517/lgbt-percentage-highest-lowest-north-dakota.aspx
+Median household income by state (income.csv): http://kff.org/other/state-indicator/median-annual-income/
+Children per family by state (children.csv): https://www.census.gov/population/socdemo/hh-fam/tabST-F1-2000.pdf
+Education attainment by state (education.csv): http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/Education.xls
+State id to state name and abbreviation: https://gist.githubusercontent.com/mbostock/4090846/raw/1ae28fbe30913c837afa8261bb94d77bba459ebe/us-state-names.tsv

@@ -30,9 +30,14 @@ button.edu {
 	background-color: #ff8533;
 	border: solid orange 1px;
 }
+
 button.children{
 	background-color: #5cd65c;
 	border: solid green 1px;
+}
+button.lgbt {
+	background-color: #ffb90f;
+	border: #ffaa00 1px;
 }
 text.posNumber {
 	fill:  #00b359;
@@ -103,75 +108,113 @@ div.hoverLabel {
 <div style="display: inline-block; vertical-align:center; float:left; padding: 30px">
 	<div><button class="reset" style="display: inline-block; " id="reset">Reset</button></div>
 	<div><button class="income" style="display: inline-block;" id="income">Income</button></div>
-	<div>
-	<button class="edu" style="display: inline-block; text-align:center" id="education">Education</button></div>
-	<div><button class = "children" style="display: inline-block;" id= "children">Children</button></div>
+	<div><button class="edu" style="display: inline-block; text-align:center" id="education">Education</button></div>
+	<div><button class="children" style="display: inline-block;" id="children">Children</button></div>
+	<div><button class="lgbt" style="display: inline-block;" id="lgbt">LGBT</button></div>
 </div>
 <div id="map" style="display: inline-block;"></div>
 <div id = "panel" style="display: inline-block;"></div>
 
 <script>
-	var currStatePanel="#Alaska";
-
-	var svgMap = d3.select("#map").append("svg").attr("width",  700).attr("height", 500);
-	var svgPanel = d3.select("#panel").append("svg").attr("width",  0).attr("height", 500).style("visibility","visible").style("float", "left");
-
-	var projection = d3.geo.albersUsa().scale(860).translate([370, 250]);
-	var mystateNames = ['', "Alabama", "Alaska", '', 'Arizona', 'Arkansas', 'California', '', 'Colorado ', 'Connecticut ', 'Delaware ', 'District of Columbia', 'Florida', 'Georgia ', '', 'Hawaii', 'Idaho', 'Illinois', 'Indiana', 'Iowa', 'Kansas', 'Kentucky', 'Louisiana', 'Maine', 'Maryland', 'Massachusetts', 'Michigan', 'Minnesota', 'Mississippi', 'Missouri', 'Montana', 'Nebraska', 'Nevada', 'New Hampshire', 'New Jersey', 'New Mexico', 'New York', 'North Carolina', 'North Dakota', 
-	'Ohio', 'Oklahoma', 'Oregon', 'Pennsylvania', '',  'Rhode Island', 'South Carolina', 'South Dakota', 'Tennessee', 'Texas', 'Utah', 'Vermont ', 'Virginia ', '', 'Washington', 'West Virginia', 'Wisconsin', 'Wyoming'];
-
-	var div = d3.select("#map")
-		    .append("div")   
+// Initial state data - all hidden
+var currStatePanel="#Alaska";
+var svgMap = d3.select("#map").append("svg")
+			   .attr("width",  700).attr("height", 500);
+var svgPanel = d3.select("#panel").append("svg")
+				 .attr("width",  0).attr("height", 500)
+				 .style("visibility","hidden")
+				 .style("float", "left");
+var div = d3.select("#map").append("div")   
     		.attr("class", "hoverLabel")               
     		.style("opacity", 0);
+var filters = {
+	NONE: -1,
+	INCOME: 0,
+	EDUCATION: 1,
+	CHILDREN: 2,
+	LGBT: 3
+};
+var currFilter = filters.NONE;
 
-	for(var i=0; i< mystateNames.length; i++){
-		if (mystateNames[i] != " "){
-			var id = mystateNames[i].replace(" ", "");
-			var svg = d3.select("#panel").append("svg").attr("width",  300).attr("height", 500).style("visibility","hidden").style("position", "absolute").attr("id", id);
-			svg.append("text").text(mystateNames[i]).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
+// Geographic map setup
+var projection = d3.geo.albersUsa().scale(860).translate([370, 250]);
+var path = d3.geo.path().projection(projection);
+
+// Data collection variables
+var adults;
+var stateData = {};
+var stateNames = [];
+var states = {};
+
+// Set up the map and panel
+d3.json("id_to_state.json", function (error, stateIds) {
+	d3.json("us.json", function(error, shapes) {
+	
+		for (var id in stateIds) {
+			var stateName = stateIds[id]["state"];
+			// Ids cannot have spaces
+			var id = stateName.replace(" ", "");
+			var svg = d3.select("#panel").append("svg")
+						.attr("width", 300).attr("height", 500)
+						.style("visibility","hidden")
+					    .style("position", "absolute")
+					    .attr("id", id);
+
+			svg.append("text").text(stateName).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
 			svg.append("svg").attr("width", 50).attr("height", 50);
 			svg.append("text").text(28).attr("x", 30).attr("y", 330).attr("class", "posNumber");
 			svg.append("text").text("%").attr("x", 75).attr("y", 330).attr("class", "posPercent");
 			svg.append("text").text(" met a significant other online ").attr("x", 120).attr("y", 325).attr("class", "posText");
-			
 
 			svg.append("text").text(42).attr("x", 30).attr("y", 400).attr("class", "negNumber");
 			svg.append("text").text("%").attr("x", 75).attr("y", 400).attr("class", "negPercent");
 			svg.append("text").text(" have broken up with their partner by changing their status to single").attr("x", 120).attr("y", 400).attr("class", "negText");
 		}
-	}
-
-	d3.select("#Alaska").style("visibility", "hidden");
-	var path = d3.geo.path().projection(projection);
-
-	d3.json("us.json", function(error, shapes) {
+		
 		states = topojson.feature(shapes, shapes.objects.states).features;
-		console.log(states[0].id);
 		var statePaths = svgMap.append("g");
+
 		statePaths.selectAll("path").data(states).enter()
 		.append("path").attr("d", path)
 		.style("fill", "red").style("stroke", "#ccc")
 		.on('click', function(d, i) {
-			d3.select(currStatePanel).style("visibility", "hidden");
-			console.log(states[i].id);
-			console.log(stateNames[0]);
-			console.log(stateNames[states[i].id])
-			var stateName = mystateNames[states[i].id];
+			var stateName = stateIds[d.id]["state"];
            	var id = "#" + stateName.replace(" ", "");
-           	currStatePanel=id;
-
            	var svg = d3.select(id).style("visibility", "visible");
-           	d3.select(this).style('fill-opacity', 1);
+
+           	// Only make the panel hidden if a different state is clicked
+           	if (id != currStatePanel) {
+	           	d3.select(currStatePanel).style("visibility", "hidden");
+	           	currStatePanel = id;
+           	}
         })
 		.on('mouseover', function(d, i) {
         	var currentState = this;
-            var stateName = mystateNames[states[i].id];
+            var stateAbbrev = stateIds[d.id]["abbrev"];
             d3.select(this).style('fill-opacity', 1);
             div.transition()        
 	      	   	.duration(200)      
-    	       	.style("opacity", .9); 
-           	var inner = 28 + "%" + " of "+stateName+ " residents use online dating";   
+    	       	.style("opacity", .9);
+
+    	    var stateName = stateIds[d.id]["state"];
+	        var inner = "";
+           	switch (currFilter) {
+           		case (filters.INCOME):
+           			inner = stateData[stateName].income;
+           			break;
+           		case (filters.EDUCATION):
+           			inner = stateData[stateName].education;
+           			break;
+           		case (filters.CHILDREN):
+           			inner = stateData[stateName].children;
+           			break;
+           		case (filters.LGBT):
+           			inner = stateData[stateName].lgbt;
+           			break;
+           		default:
+           			inner = 28 + "% of " + stateAbbrev + " residents use online dating.";
+           			break;
+           	}
            	div.text(inner)
            		.style("left", (d3.event.pageX) + "px")     
            		.style("top", (d3.event.pageY - 28) + "px");  
@@ -179,20 +222,13 @@ div.hoverLabel {
 		.on('mouseout', function(d, i) {
             d3.selectAll('path').style({'fill-opacity':.7});
             div.transition()        
-           		.duration(500)      
-           		.style("opacity", 0);
+           	   .duration(500)      
+          	   .style("opacity", 0);
         });
-		
 	});
+});
 
-
-
-
-var adults;
-var stateData = {};
-var stateNames = [];
-var states = {};
-
+// Load all the state data
 d3.csv("education.csv", function (error, edStates) {
 	d3.csv("children.csv", function (error, childStates) {
 		d3.csv("income.csv", function (error, incomeStates) {
@@ -236,6 +272,22 @@ d3.csv("education.csv", function (error, edStates) {
 		});
 	});
 });
+
+d3.select("#reset").on("click", function(d) {
+	currFilter = filters.NONE;
+});
+d3.select("#income").on("click", function (d) {
+	currFilter = filters.INCOME;
+});
+d3.select("#education").on("click", function (d) {
+	currFilter = filters.EDUCATION;
+});
+d3.select("#children").on("click", function (d) {
+	currFilter = filters.CHILDREN;
+});
+d3.select("#lgbt").on("click", function (d) {
+	currFilter = filters.LGBT;
+})
 /*
 // Load the data for online dating for adults
 d3.csv("adult_dating.csv", function (error, data){
