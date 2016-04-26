@@ -170,7 +170,7 @@ d3.json("id_to_state.json", function (error, stateIds) {
 			svg.append("text").text(" have broken up with their partner by changing their status to single").attr("x", 80).attr("y", 400).attr("class", "negText");
 		}
 		
-		var states = topojson.feature(shapes, shapes.objects.states).features;
+		states = topojson.feature(shapes, shapes.objects.states).features;
 		var statePaths = svgMap.append("g");
 
 		statePaths.selectAll("path").data(states).enter()
@@ -193,8 +193,27 @@ d3.json("id_to_state.json", function (error, stateIds) {
             d3.select(this).style('fill-opacity', 1);
             div.transition()        
 	      	   	.duration(200)      
-    	       	.style("opacity", .9); 
-           	var inner = 28 + "%" + " of " + stateAbbrev + " residents use online dating.";   
+    	       	.style("opacity", .9);
+
+    	    var stateName = stateIds[d.id]["state"];
+	        var inner = "";
+           	switch (currFilter) {
+           		case (filters.INCOME):
+           			inner = stateData[stateName].income;
+           			break;
+           		case (filters.EDUCATION):
+           			inner = stateData[stateName].education;
+           			break;
+           		case (filters.CHILDREN):
+           			inner = stateData[stateName].children;
+           			break;
+           		case (filters.LGBT):
+           			inner = stateData[stateName].lgbt;
+           			break;
+           		default:
+           			inner = 28 + "% of " + stateAbbrev + " residents use online dating.";
+           			break;
+           	}
            	div.text(inner)
            		.style("left", (d3.event.pageX) + "px")     
            		.style("top", (d3.event.pageY - 28) + "px");  
