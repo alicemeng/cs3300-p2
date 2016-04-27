@@ -310,6 +310,23 @@ d3.csv("education.csv", function (error, edStates) {
 								lgbt: 0.0,
 							};
 							stateNames.push(state.State);
+
+							// Initialize all user fields
+							userData[state.State] = {
+								userList: [],
+								income: 0,
+								children: 0.0,
+								education: {
+									lessThanHS: 0.0,
+									HSDiploma: 0.0,
+									someCollege: 0.0,
+									bachelorsPlus: 0.0
+								},
+								lgbt: 0.0,
+								topSites: [],
+								metPercentage: 0,
+								breakupPercentage: 0,
+							};
 						});
 
 						// Store children data by state
@@ -338,21 +355,6 @@ d3.csv("education.csv", function (error, edStates) {
 						// Store data for online dating users
 						adultData.forEach(function (user) {
 							var state = stateIds[user.state]["state"];
-							userData[state] = {
-								userList: [],
-								income: 0,
-								children: 0.0,
-								education: {
-									lessThanHS: 0.0,
-									HSDiploma: 0.0,
-									someCollege: 0.0,
-									bachelorsPlus: 0.0
-								},
-								lgbt: 0.0,
-								topSites: [],
-								metPercentage: 0,
-								breakupPercentage: 0,
-							};
 							var singleUserData = {
 								sites:getSites(user),
 								income:user.inc,
