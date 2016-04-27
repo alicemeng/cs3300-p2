@@ -213,13 +213,13 @@ d3.json("id_to_state.json", function (error, stateIds) {
 
 			svg.append("text").text(stateName).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
 			svg.append("svg").attr("width", 50).attr("height", 50);
-			svg.append("text").text(28).attr("x", 30).attr("y", 330).attr("class", "posNumber");
+			svg.append("text").text(userData[stateName].metPercentage).attr("x", 30).attr("y", 330).attr("class", "posNumber");
 			svg.append("text").text("%").attr("x", 75).attr("y", 330).attr("class", "posPercent");
-			svg.append("text").text(" met a significant other online ").attr("x", 120).attr("y", 325).attr("class", "posText");
+			svg.append("text").text(" met their current partner online ").attr("x", 120).attr("y", 325).attr("class", "posText");
 
-			svg.append("text").text(42).attr("x", 30).attr("y", 400).attr("class", "negNumber");
+			svg.append("text").text(userData[stateName].breakupPercentage).attr("x", 30).attr("y", 400).attr("class", "negNumber");
 			svg.append("text").text("%").attr("x", 75).attr("y", 400).attr("class", "negPercent");
-			svg.append("text").text(" have broken up with their partner by changing their status to single").attr("x", 120).attr("y", 400).attr("class", "negText");
+			svg.append("text").text(" have broken up with their partner electronically").attr("x", 120).attr("y", 400).attr("class", "negText");
 		}
 		
 		states = topojson.feature(shapes, shapes.objects.states).features;
@@ -308,6 +308,10 @@ d3.csv("education.csv", function (error, edStates) {
 									bachelorsPlus: 0.0
 								},
 								lgbt: 0.0,
+								userList: [],
+								topSites: [],
+								metPercentage: 0,
+								breakupPercentage: 0
 							};
 							stateNames.push(state.State);
 						});
@@ -349,9 +353,7 @@ d3.csv("education.csv", function (error, edStates) {
 									bachelorsPlus: 0.0
 								},
 								lgbt: 0.0,
-								topSites: [],
-								metPercentage: 0,
-								breakupPercentage: 0,
+								
 							};
 							var singleUserData = {
 								sites:getSites(user),
