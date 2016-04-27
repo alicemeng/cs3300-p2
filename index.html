@@ -132,14 +132,20 @@ var filters = {
 	LGBT: 3
 };
 var currFilter = filters.NONE;
+
 // Geographic map setup
 var projection = d3.geo.albersUsa().scale(860).translate([370, 250]);
 var path = d3.geo.path().projection(projection);
+
 // Data collection variables
 var stateData = {};
 var userData = {};
 var stateNames = [];
 var states = {};
+
+// Format for percentages
+var pSig = d3.format("%");
+
 // Returns the corresponding online dating site when given a number
 function numToSite(num){
 	var site = ""
@@ -164,6 +170,7 @@ function numToSite(num){
 	}
 	return site;
 }
+
 // Returns all the online dating sites mentioned in person's response.
 // Note: no user responded with more than 5 sites.
 function getSites(person){
@@ -173,6 +180,7 @@ function getSites(person){
 	}
 	return sites;
 }
+
 // Returns the number of children in person's response.
 function getChildren(person){
 	if (Number(person.qd2b1)!=98&&Number(person.qd2b1)!=99&&
@@ -187,6 +195,129 @@ function getChildren(person){
 	 	return null;	
 	}
 }
+
+// Load all the state data
+d3.csv("education.csv", function (error, edStates) {
+	d3.csv("children.csv", function (error, childStates) {
+		d3.csv("income.csv", function (error, incomeStates) {
+			d3.csv("lgbt.csv", function (error, lgbtStates) {
+				d3.json("id_to_state.json", function (error, stateIds) {
+					d3.csv("adult_dating.csv", function (error, adultData){
+						
+						// Store income data by state and initalize all object fields
+						incomeStates.forEach(function (state) {
+							stateData[state.State] = {
+								FIPS: "",
+								income: state.Income,
+								children: 0.0,
+								education: {
+									lessThanHS: 0.0,
+									HSDiploma: 0.0,
+									someCollege: 0.0,
+									bachelorsPlus: 0.0
+								},
+								lgbt: 0.0,
+							};
+							stateNames.push(state.State);
+
+							// Initialize all user fields
+							userData[state.State] = {
+								userList: [],
+								income: 0,
+								children: 0.0,
+								education: {
+									lessThanHS: 0.0,
+									HSDiploma: 0.0,
+									someCollege: 0.0,
+									bachelorsPlus: 0.0
+								},
+								lgbt: 0.0,
+								topSites: [],
+								metPercentage: 0,
+								breakupPercentage: 0,
+							};
+						});
+
+						// Store children data by state
+						childStates.forEach(function (state) {
+							stateData[state.State].children = state.Avg_per_family;
+						});
+
+						// Store education attainment data by state
+						edStates.forEach(function (location) {
+							if (stateNames.indexOf(location["Area name"]) > -1) {
+								stateData[location["Area name"]].education = {
+									lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"],
+									HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"],
+									someCollege: location["Percent of adults completing some college or associate's degree, 2010-2014"],
+									bachelorsPlus: location["Percent of adults with a bachelor's degree or higher, 2010-2014"]
+								};
+								stateData[location["Area name"]].FIPS = location["FIPS Code"];
+							}
+						});
+
+						// Store LGBT presence by state
+						lgbtStates.forEach(function (state) {
+							stateData[state.State].lgbt = state.Yes;
+						});	
+
+						// Store data for online dating users
+						adultData.forEach(function (user) {
+							var state = stateIds[user.state]["state"];
+							var singleUserData = {
+								sites:getSites(user),
+								income:user.inc,
+								numberOfChildren:getChildren(user),
+								educationLevel:{
+									lessThanHS: user.educ2==1||user.educ2==2,
+									HSDiploma: user.educ2==3,
+									someCollege: user.educ2 == 4 || user.educ2 == 5,
+									bachelorsPlus: user.educ2 == 6 || user.educ2 == 7 || user.educ2 == 8
+								},
+								lgbt: user.lgbt==2 || user.lgbt==3 || user.lgbt == 4,
+								metPartnerOnline: user.rel1 == 1,
+								electronicBreakup: user.breaka==1||user.breakb==1
+							};
+							userData[state].userList.push(singleUserData);
+						});
+
+						// Calculate user stats
+						for(var state in userData){
+							var metOnline = 0;
+							var eBreakup = 0;
+							var length = 0;
+							var s=userData[state];
+							for(var i=0;i<s.userList.length;i++){
+								if(s.userList[i].metPartnerOnline){metOnline++;}
+								if(s.userList[i].electronicBreakup){eBreakup++;}
+								length++;
+							}
+							var percentMet = (metOnline/length);
+							var percentBroken = (eBreakup/length);
+							userData[state].metPercentage = percentMet;
+							userData[state].breakupPercentage = percentBroken;
+
+							var svg = d3.select("#" + state.replace(" ", ""));
+
+							//Positive Fact
+							svg.append("text").html(pSig(userData[state].metPercentage))
+							   .attr("x", 30).attr("y", 330).attr("class", "posNumber");
+							svg.append("text").html("met a significant other online")
+							   .attr("x", 120).attr("y", 325).attr("class", "posText");
+
+							//Negative Fact
+							svg.append("text").text(pSig(userData[state].breakupPercentage))
+							   .attr("x", 30).attr("y", 400).attr("class", "negNumber");
+							svg.append("text").text("have broken up with their partner by changing their status to single")
+							   .attr("x", 120).attr("y", 400).attr("class", "negText");
+						}
+					});
+				});
+			});
+		});
+	});
+});
+
 // Set up the map and panel
 d3.json("id_to_state.json", function (error, stateIds) {
 	d3.json("us.json", function(error, shapes) {
@@ -199,19 +330,10 @@ d3.json("id_to_state.json", function (error, stateIds) {
 			.style("visibility","hidden")
 			.style("position", "absolute")
 			.attr("id", id);
-			//Histogram
+
+			// Histogram
 			svg.append("text").text(stateName).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
 			svg.append("svg").attr("width", 50).attr("height", 50);
-			//Positive Fact
-			console.log(userData);
-			svg.append("text").text(/*userData[stateName].metPercentage*/28).attr("x", 30).attr("y", 330).attr("class", "posNumber");
-			svg.append("text").text("%").attr("x", 75).attr("y", 330).attr("class", "posPercent");
-			svg.append("text").text(" met a significant other online ").attr("x", 120).attr("y", 325).attr("class", "posText");
-			//Negative Fact
-			svg.append("text").text(/*userData[stateName].breakupPercentage*/46).attr("x", 30).attr("y", 400).attr("class", "negNumber");
-			svg.append("text").text("%").attr("x", 75).attr("y", 400).attr("class", "negPercent");
-			svg.append("text").text(" have broken up with their partner by changing their status to single").attr("x", 120).attr("y", 400).attr("class", "negText");
-			
 		}
 		
 		states = topojson.feature(shapes, shapes.objects.states).features;
@@ -228,7 +350,7 @@ d3.json("id_to_state.json", function (error, stateIds) {
            		d3.select(currStatePanel).style("visibility", "hidden");
            		currStatePanel = id;
            	}
-           })
+        })
 		.on('mouseover', function(d, i) {
 			var currentState = this;
 			var stateAbbrev = stateIds[d.id]["abbrev"];
@@ -275,109 +397,6 @@ d3.json("id_to_state.json", function (error, stateIds) {
 		});
 	});
 });
-// Load all the state data
-d3.csv("education.csv", function (error, edStates) {
-	d3.csv("children.csv", function (error, childStates) {
-		d3.csv("income.csv", function (error, incomeStates) {
-			d3.csv("lgbt.csv", function (error, lgbtStates) {
-				d3.json("id_to_state.json", function (error, stateIds) {
-					d3.csv("adult_dating.csv", function (error, adultData){
-						
-						// Store income data by state and initalize all object fields
-						incomeStates.forEach(function (state) {
-							stateData[state.State] = {
-								FIPS: "",
-								income: state.Income,
-								children: 0.0,
-								education: {
-									lessThanHS: 0.0,
-									HSDiploma: 0.0,
-									someCollege: 0.0,
-									bachelorsPlus: 0.0
-								},
-								lgbt: 0.0,
-							};
-							stateNames.push(state.State);
-							// Initialize all user fields
-							userData[state.State] = {
-								userList: [],
-								income: 0,
-								children: 0.0,
-								education: {
-									lessThanHS: 0.0,
-									HSDiploma: 0.0,
-									someCollege: 0.0,
-									bachelorsPlus: 0.0
-								},
-								lgbt: 0.0,
-								topSites: [],
-								metPercentage: 0,
-								breakupPercentage: 0,
-							};
-						});
-						// Store children data by state
-						childStates.forEach(function (state) {
-							stateData[state.State].children = state.Avg_per_family;
-						});
-						// Store education attainment data by state
-						edStates.forEach(function (location) {
-							if (stateNames.indexOf(location["Area name"]) > -1) {
-								stateData[location["Area name"]].education = {
-									lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"],
-									HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"],
-									someCollege: location["Percent of adults completing some college or associate's degree, 2010-2014"],
-									bachelorsPlus: location["Percent of adults with a bachelor's degree or higher, 2010-2014"]
-								};
-								stateData[location["Area name"]].FIPS = location["FIPS Code"];
-							}
-						});
-						// Store LGBT presence by state
-						lgbtStates.forEach(function (state) {
-							stateData[state.State].lgbt = state.Yes;
-						});	
-						// Store data for online dating users
-						adultData.forEach(function (user) {
-							var state = stateIds[user.state]["state"];
-							var singleUserData = {
-								sites:getSites(user),
-								income:user.inc,
-								numberOfChildren:getChildren(user),
-								educationLevel:{
-									lessThanHS: user.educ2==1||user.educ2==2,
-									HSDiploma: user.educ2==3,
-									someCollege: user.educ2 == 4 || user.educ2 == 5,
-									bachelorsPlus: user.educ2 == 6 || user.educ2 == 7 || user.educ2 == 8
-								},
-								lgbt: user.lgbt==2 || user.lgbt==3 || user.lgbt == 4,
-								metPartnerOnline: user.rel1 == 1,
-								electronicBreakup: user.breaka==1||user.breakb==1
-							};
-							userData[state].userList.push(singleUserData);
-						});
-						for(var state in userData){
-							var metOnline = 0;
-							var eBreakup = 0;
-							var length = 0;
-							var s=userData[state];
-							for(var i=0;i<s.userList.length;i++){
-								if(s.userList[i].metPartnerOnline){metOnline++;}
-								if(s.userList[i].electronicBreakup){eBreakup++;}
-								length++;
-							}
-							var percentMet = (metOnline/length)*100;
-							var percentBroken = (eBreakup/length)*100;
-							userData[state].metPercentage = percentMet;
-							userData[state].breakupPercentage = percentBroken;
-						}
-
-
-					});
-				});
-			});
-		});
-	});
-});
-
 
 d3.select("#reset").on("click", function(d) {
 	currFilter = filters.NONE;
