@@ -140,6 +140,8 @@ var stateData = {};
 var userData = {};
 var stateNames = [];
 var states = {};
+// Format for percentages
+var pSig = d3.format("%");
 // Returns the corresponding online dating site when given a number
 function numToSite(num){
 	var site = ""
@@ -187,94 +189,18 @@ function getChildren(person){
 	 	return null;	
 	}
 }
-// Set up the map and panel
-d3.json("id_to_state.json", function (error, stateIds) {
-	d3.json("us.json", function(error, shapes) {
-		for (var id in stateIds) {
-			var stateName = stateIds[id]["state"];
-			// Ids cannot have spaces
-			var id = stateName.replace(" ", "");
-			var svg = d3.select("#panel").append("svg")
-			.attr("width", 300).attr("height", 500)
-			.style("visibility","hidden")
-			.style("position", "absolute")
-			.attr("id", id);
-			//Histogram
-			svg.append("text").text(stateName).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
-			svg.append("svg").attr("width", 50).attr("height", 50);
-			//Positive Fact
-			console.log(userData);
-			svg.append("text").text(/*userData[stateName].metPercentage*/28).attr("x", 30).attr("y", 330).attr("class", "posNumber");
-			svg.append("text").text("%").attr("x", 75).attr("y", 330).attr("class", "posPercent");
-			svg.append("text").text(" met a significant other online ").attr("x", 120).attr("y", 325).attr("class", "posText");
-			//Negative Fact
-			svg.append("text").text(/*userData[stateName].breakupPercentage*/46).attr("x", 30).attr("y", 400).attr("class", "negNumber");
-			svg.append("text").text("%").attr("x", 75).attr("y", 400).attr("class", "negPercent");
-			svg.append("text").text(" have broken up with their partner by changing their status to single").attr("x", 120).attr("y", 400).attr("class", "negText");
-			
-		}
-		
-		states = topojson.feature(shapes, shapes.objects.states).features;
-		var statePaths = svgMap.append("g");
-		statePaths.selectAll("path").data(states).enter()
-		.append("path").attr("d", path)
-		.style("fill", "red").style("stroke", "#ccc")
-		.on('click', function(d, i) {
-			var stateName = stateIds[d.id]["state"];
-			var id = "#" + stateName.replace(" ", "");
-			var svg = d3.select(id).style("visibility", "visible");
-           	// Only make the panel hidden if a different state is clicked
-           	if (id != currStatePanel) {
-           		d3.select(currStatePanel).style("visibility", "hidden");
-           		currStatePanel = id;
-           	}
-           })
-		.on('mouseover', function(d, i) {
-			var currentState = this;
-			var stateAbbrev = stateIds[d.id]["abbrev"];
-			d3.select(this).style('fill-opacity', 1);
-			div.transition()        
-			.duration(200)      
-			.style("opacity", .9);
-			var stateName = stateIds[d.id]["state"];
-			var inner = "";
-			switch (currFilter) {
-				case (filters.INCOME):
-					inner = stateAbbrev + ": $" + stateData[stateName].income +
-							"<br>" +
-					        "Users: $" + userData[stateName].income;
-					break;
-				case (filters.EDUCATION):
-					inner = stateAbbrev + ": " + stateData[stateName].education.someCollege + "%" +
-							"<br>" +
-							"Users: " + userData[stateName].education.someCollege + "%";
-					break;
-				case (filters.CHILDREN):
-					inner = stateAbbrev + ": " + stateData[stateName].children +
-							"<br>" +
-							"Users: " + userData[stateName].children;
-					break;
-				case (filters.LGBT):
-					inner = stateAbbrev + ": " + stateData[stateName].lgbt + "%" +
-							"<br>" +
-							"Users: " + userData[stateName].lgbt + "%";
-					break;
-				default:
-					inner = 28 + "% of " + stateAbbrev + " residents use online dating.";
-					break;
-			}
-			div.html(inner)
-			.style("left", (d3.event.pageX) + "px")     
-			.style("top", (d3.event.pageY - 28) + "px");  
-		})
-		.on('mouseout', function(d, i) {
-			d3.selectAll('path').style({'fill-opacity':.7});
-			div.transition()        
-			.duration(500)      
-			.style("opacity", 0);
-		});
-	});
-});
+//Returns the average of the person's income range
+function getIncome(person){
+	if(person.inc==1){return 5000;}
+	else if(person.inc==2){return 15000;}
+	else if(person.inc==3){return 25000;}
+	else if(person.inc==4){return 35000;}
+	else if(person.inc==5){return 45000;}
+	else if(person.inc==6){return 62500;}
+	else if(person.inc==7){return 87500;}
+	else if(person.inc==8){return 125000;}
+	else{return 175000;}
+}
 // Load all the state data
 d3.csv("education.csv", function (error, edStates) {
 	d3.csv("children.csv", function (error, childStates) {
@@ -340,7 +266,7 @@ d3.csv("education.csv", function (error, edStates) {
 							var state = stateIds[user.state]["state"];
 							var singleUserData = {
 								sites:getSites(user),
-								income:user.inc,
+								income:getIncome(user),
 								numberOfChildren:getChildren(user),
 								educationLevel:{
 									lessThanHS: user.educ2==1||user.educ2==2,
@@ -354,6 +280,7 @@ d3.csv("education.csv", function (error, edStates) {
 							};
 							userData[state].userList.push(singleUserData);
 						});
+						// Calculate user stats
 						for(var state in userData){
 							var metOnline = 0;
 							var eBreakup = 0;
@@ -364,21 +291,106 @@ d3.csv("education.csv", function (error, edStates) {
 								if(s.userList[i].electronicBreakup){eBreakup++;}
 								length++;
 							}
-							var percentMet = (metOnline/length)*100;
-							var percentBroken = (eBreakup/length)*100;
+							var percentMet = (metOnline/length);
+							var percentBroken = (eBreakup/length);
 							userData[state].metPercentage = percentMet;
 							userData[state].breakupPercentage = percentBroken;
+							var svg = d3.select("#" + state.replace(" ", ""));
+							//Positive Fact
+							svg.append("text").html(pSig(userData[state].metPercentage))
+							   .attr("x", 30).attr("y", 330).attr("class", "posNumber");
+							svg.append("text").html("met a significant other online")
+							   .attr("x", 120).attr("y", 325).attr("class", "posText");
+							//Negative Fact
+							svg.append("text").text(pSig(userData[state].breakupPercentage))
+							   .attr("x", 30).attr("y", 400).attr("class", "negNumber");
+							svg.append("text").text("have broken up with their partner by changing their status to single")
+							   .attr("x", 120).attr("y", 400).attr("class", "negText");
 						}
-
-
 					});
 				});
 			});
 		});
 	});
 });
-
-
+// Set up the map and panel
+d3.json("id_to_state.json", function (error, stateIds) {
+	d3.json("us.json", function(error, shapes) {
+		for (var id in stateIds) {
+			var stateName = stateIds[id]["state"];
+			// Ids cannot have spaces
+			var id = stateName.replace(" ", "");
+			var svg = d3.select("#panel").append("svg")
+			.attr("width", 300).attr("height", 500)
+			.style("visibility","hidden")
+			.style("position", "absolute")
+			.attr("id", id);
+			// Histogram
+			svg.append("text").text(stateName).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
+			svg.append("svg").attr("width", 50).attr("height", 50);
+		}
+		
+		states = topojson.feature(shapes, shapes.objects.states).features;
+		var statePaths = svgMap.append("g");
+		statePaths.selectAll("path").data(states).enter()
+		.append("path").attr("d", path)
+		.style("fill", "red").style("stroke", "#ccc")
+		.on('click', function(d, i) {
+			var stateName = stateIds[d.id]["state"];
+			var id = "#" + stateName.replace(" ", "");
+			var svg = d3.select(id).style("visibility", "visible");
+           	// Only make the panel hidden if a different state is clicked
+           	if (id != currStatePanel) {
+           		d3.select(currStatePanel).style("visibility", "hidden");
+           		currStatePanel = id;
+           	}
+        })
+		.on('mouseover', function(d, i) {
+			var currentState = this;
+			var stateAbbrev = stateIds[d.id]["abbrev"];
+			d3.select(this).style('fill-opacity', 1);
+			div.transition()        
+			.duration(200)      
+			.style("opacity", .9);
+			var stateName = stateIds[d.id]["state"];
+			var inner = "";
+			switch (currFilter) {
+				case (filters.INCOME):
+					inner = stateAbbrev + ": $" + stateData[stateName].income +
+							"<br>" +
+					        "Users: $" + userData[stateName].income;
+					break;
+				case (filters.EDUCATION):
+					inner = stateAbbrev + ": " + stateData[stateName].education.someCollege + "%" +
+							"<br>" +
+							"Users: " + userData[stateName].education.someCollege + "%";
+					break;
+				case (filters.CHILDREN):
+					inner = stateAbbrev + ": " + stateData[stateName].children +
+							"<br>" +
+							"Users: " + userData[stateName].children;
+					break;
+				case (filters.LGBT):
+					inner = stateAbbrev + ": " + stateData[stateName].lgbt + "%" +
+							"<br>" +
+							"Users: " + userData[stateName].lgbt + "%";
+					break;
+				default:
+					inner = 28 + "% of " + stateAbbrev + " residents use online dating.";
+					break;
+			}
+			div.html(inner)
+			.style("left", (d3.event.pageX) + "px")     
+			.style("top", (d3.event.pageY - 28) + "px");  
+		})
+		.on('mouseout', function(d, i) {
+			d3.selectAll('path').style({'fill-opacity':.7});
+			div.transition()        
+			.duration(500)      
+			.style("opacity", 0);
+		});
+	});
+});
 d3.select("#reset").on("click", function(d) {
 	currFilter = filters.NONE;
 });
