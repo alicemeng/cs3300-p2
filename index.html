@@ -172,7 +172,7 @@ var p0 = d3.format("%");
 var sig2 = d3.format(".2r");
 var formatIncome = d3.format("$,");
 
-// >>>>>>> 8be44f50bacb14befc6e3345cb0c19278913b3fb
+
 // Returns the corresponding online dating site when given a number
 function numToSite(num){
 	var site = ""
@@ -220,7 +220,7 @@ function getChildren(person){
 	 	return null;	
 	}
 }
-// <<<<<<< HEAD
+
 //Returns the average of the person's income range
 function getIncome(person){
 	if(person.inc==1){return 5000;}
@@ -233,7 +233,7 @@ function getIncome(person){
 	else if(person.inc==8){return 125000;}
 	else{return 175000;}
 }
-// =======
+
 
 
 
@@ -332,8 +332,7 @@ d3.csv("education.csv", function (error, edStates) {
 							var percentBroken = (eBreakup/i);
 							userData[state].metPercentage = percentMet;
 							userData[state].breakupPercentage = percentBroken;
-// <<<<<<< HEAD
-// =======
+
 
 							// Calculate median income
 							userData[state].income = d3.median(userData[state].userList, function (user) {
