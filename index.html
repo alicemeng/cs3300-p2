@@ -66,7 +66,7 @@
 	.axis path { fill: none; stroke: #aaa;}
 	.axis line { stroke: #aaa; }
 	.axis text { fill: #aaa; font-size: .7em; }
-	rect.bar { fill: #cc0000;; }
+	rect.bar { fill:  #b30000; opacity: .85}
 	text.label {
 		fill: #888;
 		font-size: x-small;
@@ -89,7 +89,8 @@
 	}
 	text.histLabel{
 		font-weight: 700;
-		font-size: 14px;
+		font-size: 20px;
+		fill: #737373;
 	}
 	circle.rank {
 		fill: red;
@@ -362,9 +363,9 @@ d3.csv("education.csv", function (error, edStates) {
 							   .attr("x", 120).attr("y", 325).attr("class", "posText");
 
 							//Negative Fact
-							svg.append("text").text(p0(userData[state].breakupPercentage))
+							svg.append("text").html(p0(userData[state].breakupPercentage))
 							   .attr("x", 30).attr("y", 400).attr("class", "negNumber");
-							svg.append("text").text("have broken up with their partner by changing their status to single")
+							svg.append("text").html("have broken up with their partner by changing their status to single")
 							   .attr("x", 120).attr("y", 400).attr("class", "negText");
 						}
 					});
