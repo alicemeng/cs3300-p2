@@ -143,8 +143,10 @@ var userData = {};
 var stateNames = [];
 var states = {};
 
-// Format for percentages
-var pSig = d3.format("%");
+// Formats for stats
+var p0 = d3.format("%");
+var sig2 = d3.format(".2r");
+var formatIncome = d3.format("$,");
 
 // Returns the corresponding online dating site when given a number
 function numToSite(num){
@@ -207,7 +209,7 @@ d3.csv("education.csv", function (error, edStates) {
 						// Store income data by state and initalize all object fields
 						incomeStates.forEach(function (state) {
 							stateData[state.State] = {
-								FIPS: "",
+								// FIPS: "",
 								income: state.Income,
 								children: 0.0,
 								education: {
@@ -247,18 +249,18 @@ d3.csv("education.csv", function (error, edStates) {
 						edStates.forEach(function (location) {
 							if (stateNames.indexOf(location["Area name"]) > -1) {
 								stateData[location["Area name"]].education = {
-									lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"],
-									HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"],
-									someCollege: location["Percent of adults completing some college or associate's degree, 2010-2014"],
-									bachelorsPlus: location["Percent of adults with a bachelor's degree or higher, 2010-2014"]
+									lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"]/100,
+									HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"]/100,
+									someCollege: location["Percent of adults completing some college or associate's degree, 2010-2014"]/100,
+									bachelorsPlus: location["Percent of adults with a bachelor's degree or higher, 2010-2014"]/100
 								};
-								stateData[location["Area name"]].FIPS = location["FIPS Code"];
+								// stateData[location["Area name"]].FIPS = location["FIPS Code"];
 							}
 						});
 
 						// Store LGBT presence by state
 						lgbtStates.forEach(function (state) {
-							stateData[state.State].lgbt = state.Yes;
+							stateData[state.State].lgbt = state.Yes/100;
 						});	
 
 						// Store data for online dating users
@@ -285,28 +287,59 @@ d3.csv("education.csv", function (error, edStates) {
 						for(var state in userData){
 							var metOnline = 0;
 							var eBreakup = 0;
-							var length = 0;
+							var i;
 							var s=userData[state];
-							for(var i=0;i<s.userList.length;i++){
+							for(i=0;i<s.userList.length;i++){
 								if(s.userList[i].metPartnerOnline){metOnline++;}
 								if(s.userList[i].electronicBreakup){eBreakup++;}
-								length++;
 							}
-							var percentMet = (metOnline/length);
-							var percentBroken = (eBreakup/length);
+							var percentMet = (metOnline/i);
+							var percentBroken = (eBreakup/i);
 							userData[state].metPercentage = percentMet;
 							userData[state].breakupPercentage = percentBroken;
 
+							// Calculate median income
+							userData[state].income = d3.median(userData[state].userList, function (user) {
+								return user.income;
+							});
+
+							// Calculate the mean number of children per household
+							userData[state].children = d3.mean(userData[state].userList, function (user) {
+								return user.numberOfChildren;
+							});
+
+							// Calculate the percentages of education attainment for users
+							userData[state].education = {
+								lessThanHS: d3.sum(userData[state].userList, function (user) {
+									return user.educationLevel.lessThanHS;
+								}) / userData[state].userList.length,
+								HSDiploma: d3.sum(userData[state].userList, function (user) {
+									return user.educationLevel.HSDiploma;
+								}) / userData[state].userList.length,
+								someCollege: d3.sum(userData[state].userList, function (user) {
+									return user.educationLevel.someCollege;
+								}) / userData[state].userList.length,
+								bachelorsPlus: d3.sum(userData[state].userList, function (user) {
+									return user.educationLevel.bachelorsPlus;
+								}) / userData[state].userList.length,
+							};
+
+							// Calculate the percentage of users who identify as LGBT
+							userData[state].lgbt = d3.sum(userData[state].userList, function (user) {
+								return user.lgbt;
+							}) / userData[state].userList.length;
+
+							// Update the detail pane
 							var svg = d3.select("#" + state.replace(" ", ""));
 
 							//Positive Fact
-							svg.append("text").html(pSig(userData[state].metPercentage))
+							svg.append("text").html(p0(userData[state].metPercentage))
 							   .attr("x", 30).attr("y", 330).attr("class", "posNumber");
 							svg.append("text").html("met a significant other online")
 							   .attr("x", 120).attr("y", 325).attr("class", "posText");
 
 							//Negative Fact
-							svg.append("text").text(pSig(userData[state].breakupPercentage))
+							svg.append("text").text(p0(userData[state].breakupPercentage))
 							   .attr("x", 30).attr("y", 400).attr("class", "negNumber");
 							svg.append("text").text("have broken up with their partner by changing their status to single")
 							   .attr("x", 120).attr("y", 400).attr("class", "negText");
@@ -362,24 +395,24 @@ d3.json("id_to_state.json", function (error, stateIds) {
 			var inner = "";
 			switch (currFilter) {
 				case (filters.INCOME):
-					inner = stateAbbrev + ": $" + stateData[stateName].income +
+					inner = stateAbbrev + ": " + formatIncome(stateData[stateName].income) +
 							"<br>" +
-					        "Users: $" + userData[stateName].income;
+					        "Users: " + formatIncome(userData[stateName].income);
 					break;
 				case (filters.EDUCATION):
-					inner = stateAbbrev + ": " + stateData[stateName].education.someCollege + "%" +
+					inner = stateAbbrev + ": " + p0(stateData[stateName].education.someCollege) +
 							"<br>" +
-							"Users: " + userData[stateName].education.someCollege + "%";
+							"Users: " + p0(userData[stateName].education.someCollege);
 					break;
 				case (filters.CHILDREN):
-					inner = stateAbbrev + ": " + stateData[stateName].children +
+					inner = stateAbbrev + ": " + sig2(stateData[stateName].children) +
 							"<br>" +
-							"Users: " + userData[stateName].children;
+							"Users: " + sig2(userData[stateName].children);
 					break;
 				case (filters.LGBT):
-					inner = stateAbbrev + ": " + stateData[stateName].lgbt + "%" +
+					inner = stateAbbrev + ": " + p0(stateData[stateName].lgbt) +
 							"<br>" +
-							"Users: " + userData[stateName].lgbt + "%";
+							"Users: " + p0(userData[stateName].lgbt);
 					break;
 				default:
 					inner = 28 + "% of " + stateAbbrev + " residents use online dating.";
