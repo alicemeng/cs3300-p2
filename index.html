@@ -128,8 +128,8 @@
 	<div><button class="children" style="display: inline-block;" id="children">Children</button></div>
 	<div><button class="lgbt" style="display: inline-block;" id="lgbt">LGBT</button></div>
 </div>
-<div id="map" style="display: inline-block;"></div>
-<div id = "panel" style="display: inline-block; "></div>
+<div id="map" style="display: inline-block; position: absolute"></div>
+<div id = "panel" style="left: 700; display: inline-block; position:relative; "></div>
 
 
 <script>
@@ -464,8 +464,8 @@ d3.json("id_to_state.json", function (error, stateIds) {
 					break;
 			}
 			div.html(inner)
-			.style("left", (d3.event.pageX) + "px")     
-			.style("top", (d3.event.pageY - 28) + "px");  
+			.style("left", (d3.event.pageX-210) + "px")     
+			.style("top", (d3.event.pageY - 120) + "px");  
 		})
 		.on('mouseout', function(d, i) {
 			d3.selectAll('path').style({'fill-opacity':.7});
