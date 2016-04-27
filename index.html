@@ -204,7 +204,7 @@ d3.json("id_to_state.json", function (error, stateIds) {
 			svg.append("svg").attr("width", 50).attr("height", 50);
 			//Positive Fact
 			console.log(userData);
-			svg.append("text").text(/*userData[stateName].metPercentage*/28).attr("x", 30).attr("y", 330).attr("class", "posNumber");
+			svg.append("text").text(userData[stateName].metPercentage).attr("x", 30).attr("y", 330).attr("class", "posNumber");
 			svg.append("text").text("%").attr("x", 75).attr("y", 330).attr("class", "posPercent");
 			svg.append("text").text(" met a significant other online ").attr("x", 120).attr("y", 325).attr("class", "posText");
 			//Negative Fact
