@@ -436,7 +436,7 @@ d3.csv("education.csv", function (error, edStates) {
 								//Negative Fact
 								svg.append("text").html(p0(userData[state].breakupPercentage))
 								   .attr("x", 30).attr("y", 400).attr("class", "negNumber");
-								svg.append("text").html("have broken up with their partner by changing their status to single")
+								svg.append("text").html("have broken up with their partner electronically")
 								   .attr("x", 120).attr("y", 400).attr("class", "negText");
 							}
 								
@@ -727,7 +727,7 @@ d3.json("id_to_state.json", function (error, stateIds) {
 			// Ids cannot have spaces
 			var id = stateName.replace(" ", "");
 			var svg = d3.select("#panel").append("svg")
-			.attr("width", 300).attr("height", 500)
+			.attr("width", 375).attr("height", 500)
 			.style("visibility","hidden")
 			.style("position", "absolute")
 			.attr("id", id);
