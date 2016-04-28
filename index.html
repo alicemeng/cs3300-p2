@@ -456,6 +456,7 @@ d3.csv("education.csv", function (error, edStates) {
 								svg.append("text").html("have broken up electronically")
 								   .attr("x", 170).attr("y", 400).attr("class", "negText");
 							}
+
 							//Load Map
 							states = topojson.feature(shapes, shapes.objects.states).features;
 							var statePaths = svgMap.append("g");
@@ -538,7 +539,7 @@ d3.csv("education.csv", function (error, edStates) {
 								return user.lgbt;
 							}) / userData[state].userList.length;
 
-							//Chlorlpleth scaling
+							/************* Choropleth Scaling *************/
 							//Income Scale: 
 							var maxIncome = 0;
 							var minIncome = 1000000000000;
@@ -554,7 +555,7 @@ d3.csv("education.csv", function (error, edStates) {
 							var incomeDomain = [minIncome, midIncome1, midIncome2, maxIncome];
 							var incomeScale = d3.scale.linear().domain(incomeDomain).range(incomeColor);
 							
-							//Education Scale:
+							// Education Scale:
 							var maxEdu = -100000;
 							var minEdu = 1000000000000;
 							for(state in stateData){
@@ -569,7 +570,7 @@ d3.csv("education.csv", function (error, edStates) {
 							var eduDomain = [minEdu, midEdu1, midEdu2, maxEdu];
 							var eduScale = d3.scale.linear().domain(eduDomain).range(eduColor);
 
-							//Children Scale:
+							// Children Scale:
 							var maxChild = -100000;
 							var minChild = 1000000000000;
 							for(state in stateData){
@@ -584,7 +585,7 @@ d3.csv("education.csv", function (error, edStates) {
 							var childDomain = [minChild, midChild1, midChild2, maxChild];
 							var childScale = d3.scale.linear().domain(childDomain).range(childColor);
 
-							//LGBT Scale:
+							// LGBT Scale:
 							var maxLGBT = -100000;
 							var minLGBT = 1000000000000;
 							for(state in stateData){
@@ -598,9 +599,9 @@ d3.csv("education.csv", function (error, edStates) {
 							var lgbtColor = ["#f2e6ff","#bf80ff","#8c1aff", "#400080"];
 							var lgbtDomain = [minLGBT, midLGBT1, midLGBT2, maxLGBT];							
 							var LGBTscale = d3.scale.linear().domain(lgbtDomain).range(lgbtColor);
-							//Legends
-							
-							//Income Legend:
+
+							/************* Legends *************/
+							// Income Legend:
 							var incomeLegend = svgMap.append("g").style("visibility", "hidden");
 							var incomeX = 90;
 							incomeLegend.append("text").text("Difference in median incomes").attr("x", incomeX).attr("y", 22);
@@ -609,7 +610,8 @@ d3.csv("education.csv", function (error, edStates) {
 								incomeLegend.append("text").attr("x", incomeX).attr("y", 55).html("$" +incomeDomain[inc]);
 								incomeX+=70;
 							}
-							//Edu Legend
+
+							// Edu Legend
 							var eduLegend = svgMap.append("g").style("visibility", "hidden");
 							var eduX = 90;
 							eduLegend.append("text").text("Difference in percentage of state population with some college education").attr("x", eduX).attr("y", 22);
@@ -618,7 +620,8 @@ d3.csv("education.csv", function (error, edStates) {
 								eduLegend.append("text").attr("x", eduX).attr("y", 55).html(p0(eduDomain[edu]));
 								eduX+=70;
 							}
-							//Child Legend
+							
+							// Child Legend
 							var childLegend = svgMap.append("g").style("visibility", "hidden");
 							var childX = 90;
 							childLegend.append("text").text("Difference in average number of children").attr("x", childX).attr("y", 22);
@@ -636,9 +639,11 @@ d3.csv("education.csv", function (error, edStates) {
 								lgbtLegend.append("text").attr("x", lgbtX).attr("y", 55).html(p0(lgbtDomain[lg]));
 								lgbtX+=70;
 							}
+
 							//Current legend set to income
 							var currLegend = incomeLegend;
-							//Buttons
+							
+							/************* Buttons and Filters *************/
 							d3.select("#reset").on("click", function(d) {
 								currFilter = filters.NONE;
 							});
@@ -657,6 +662,7 @@ d3.csv("education.csv", function (error, edStates) {
 								});
 							});
 						
+							// Edu Button
 							d3.select("#education").on("click", function (d) {
 								currFilter = filters.EDUCATION;
 								currLegend.style("visibility", "hidden");
@@ -669,6 +675,8 @@ d3.csv("education.csv", function (error, edStates) {
 									return eduScale(eduValue);
 								});
 							});
+
+							// Children Button
 							d3.select("#children").on("click", function (d) {
 								currFilter = filters.CHILDREN;
 								currLegend.style("visibility", "hidden");
@@ -682,6 +690,8 @@ d3.csv("education.csv", function (error, edStates) {
 								});							
 
 							});
+
+							// LGBT Button
 							d3.select("#lgbt").on("click", function (d) {
 								currFilter = filters.LGBT;
 								currLegend.style("visibility", "hidden");
