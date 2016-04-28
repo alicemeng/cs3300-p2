@@ -377,7 +377,7 @@ d3.csv("education.csv", function (error, edStates) {
 						var statePaths = svgMap.append("g");
 						var tempStates=statePaths.selectAll("path").data(states).enter()
 						.append("path").attr("d", path)
-						.style("fill", "red").style("stroke", "#ccc").style("fill-opacity", "0.7")
+						.style("fill", "red").style("stroke", "#ccc").style("fill-opacity", "0.8")
 						.on('click', function(d, i) {
 							var stateName = stateIds[d.id]["state"];
 							var id = "#" + stateName.replace(" ", "");
@@ -427,7 +427,7 @@ d3.csv("education.csv", function (error, edStates) {
 							.style("top", (d3.event.pageY - 120) + "px");  
 						})
 						.on('mouseout', function(d, i) {
-							d3.selectAll('path').style({'fill-opacity':.7});
+							d3.selectAll('path').style({'fill-opacity':.8});
 							div.transition()        
 							.duration(500)      
 							.style("opacity", 0);
@@ -442,9 +442,44 @@ d3.csv("education.csv", function (error, edStates) {
 							if (currDiff > maxIncome) 	maxIncome = currDiff;
 							if (currDiff < minIncome)	minIncome = currDiff;
 						}
-						var incomeScale = d3.scale.linear().domain([minIncome, maxIncome]).range(["#ccd9ff", "#0040ff"]);
+						var incomeScale = d3.scale.linear().domain([minIncome, maxIncome]).range(["#e6ecff", "#0040ff"]);
+						
+						//Education Scale:
+						var maxEdu = -100000;
+						var minEdu = 1000000000000;
+						for(state in stateData){
+							var currEdu = Math.abs(stateData[state].education.someCollege - userData[state].education.someCollege);
+							if (currEdu > maxEdu) 	maxEdu = currEdu;
+							if (currEdu < minEdu)	minEdu = currEdu;
+						}
+						var eduScale = d3.scale.linear().domain([minEdu, maxEdu]).range(["#ffd1b3", "#ff6600"]);
+
+						//Children Scale:
+						var maxChild = -100000;
+						var minChild = 1000000000000;
+						for(state in stateData){
+							var currChild = Math.abs(stateData[state].children - userData[state].children);
+							if (currChild > maxChild) 	maxChild = currChild;
+							if (currChild < minChild)		minChild = currChild;
+						}
+						var childScale = d3.scale.linear().domain([minChild, maxChild]).range(["#d6f5d6", "#239023"]);
+
+						//LGBT Scale:
+						var maxLGBT = -100000;
+						var minLGBT = 1000000000000;
+						for(state in stateData){
+							var currLGBT = Math.abs(stateData[state].lgbt - userData[state].lgbt);
+							if (currLGBT > maxLGBT) 	maxLGBT = currLGBT;
+							if (currLGBT < minLGBT)		minLGBT = currLGBT;
+						}
+						var LGBTscale = d3.scale.linear().domain([minLGBT, maxLGBT]).range(["#e6ccff", "#400080"]);
+
+
 
 						//Buttons
+						d3.select("#reset").on("click", function(d) {
+							currFilter = filters.NONE;
+						});
 						//Income Button
 						d3.select("#income").on("click", function (d) {
 							currFilter = filters.INCOME;
@@ -455,6 +490,37 @@ d3.csv("education.csv", function (error, edStates) {
 										return incomeScale(incomeValue);
 							});
 						});
+						d3.select("#education").on("click", function (d) {
+							currFilter = filters.EDUCATION;
+							tempStates.style("fill", function (eState) {
+										if (eState.id>56) return "#000";
+										var eduStateName = stateIds[eState.id]["state"];
+										var eduValue = Math.abs(stateData[eduStateName].education.someCollege-userData[eduStateName].education.someCollege);
+										return eduScale(eduValue);
+							});
+						});
+						d3.select("#children").on("click", function (d) {
+							currFilter = filters.CHILDREN;
+							tempStates.style("fill", function (cState) {
+										if (cState.id>56) return "#000";
+										var childStateName = stateIds[cState.id]["state"];
+										var childValue = Math.abs(stateData[childStateName].children-userData[childStateName].children);
+										return childScale(childValue);
+							});							
+
+						});
+						d3.select("#lgbt").on("click", function (d) {
+							currFilter = filters.LGBT;
+							tempStates.style("fill", function (lState) {
+										console.log(lState);
+										if (lState.id>56) return "#000";
+										var LGBTstateName = stateIds[lState.id]["state"];
+										var LGBTvalue = Math.abs(stateData[LGBTstateName].lgbt-userData[LGBTstateName].lgbt);
+										if (isNaN(LGBTvalue)) return "#ffffff";
+										return LGBTscale(LGBTvalue);
+							});							
+						});
+
 					});
 				});
 			});
@@ -501,21 +567,6 @@ d3.json("id_to_state.json", function (error, stateIds) {
 			}
 		}
 	});
-});
-d3.select("#reset").on("click", function(d) {
-	currFilter = filters.NONE;
-});
-d3.select("#income").on("click", function (d) {
-	currFilter = filters.INCOME;
-});
-d3.select("#education").on("click", function (d) {
-	currFilter = filters.EDUCATION;
-});
-d3.select("#children").on("click", function (d) {
-	currFilter = filters.CHILDREN;
-});
-d3.select("#lgbt").on("click", function (d) {
-	currFilter = filters.LGBT;
 });
 </script>
 </body>
