@@ -342,7 +342,7 @@ d3.csv("education.csv", function (error, edStates) {
 								for(i=0;i<s.userList.length;i++){
 									if(s.userList[i].metPartnerOnline){metOnline++;}
 									if(s.userList[i].electronicBreakup){eBreakup++;}
-									if(s.userList[i].isUser){userNumber++;}
+									if(s.userList[i].isUser){ userNumber++;}
 								}
 								var percentMet = (metOnline/i);
 								var percentBroken = (eBreakup/i);
@@ -459,7 +459,7 @@ d3.csv("education.csv", function (error, edStates) {
 								   .attr("x", 170).attr("y", 400).attr("class", "negText");
 							}
 
-							//Load Map
+							// Load map and display hover data
 							states = topojson.feature(shapes, shapes.objects.states).features;
 							var statePaths = svgMap.append("g");
 							var tempStates=statePaths.selectAll("path").data(states).enter()
@@ -506,11 +506,12 @@ d3.csv("education.csv", function (error, edStates) {
 												"Users: " + p0(userData[stateName].lgbt);
 										break;
 									default:
-										inner = 28 + "% of " + stateAbbrev + " residents use online dating.";
+										inner = p0(userData[stateName].userPercentage) + " of " + stateAbbrev + 
+												" residents use online dating.";
 										break;
 								}
 								div.html(inner)
-								.style("left", (d3.event.pageX-210) + "px")     
+								.style("left", (d3.event.pageX - 210) + "px")     
 								.style("top", (d3.event.pageY - 120) + "px");  
 							})
 							.on('mouseout', function(d, i) {
@@ -632,7 +633,8 @@ d3.csv("education.csv", function (error, edStates) {
 								childLegend.append("text").attr("x", childX).attr("y", 55).html(sig2(childDomain[chi]));
 								childX+=70;
 							}
-							//LGBT Legend
+
+							// LGBT Legend
 							var lgbtLegend = svgMap.append("g").style("visibility", "hidden");
 							var lgbtX = 90;
 							lgbtLegend.append("text").text("Difference in percentage of those who identify with the LGBT community").attr("x", lgbtX).attr("y", 22);
