@@ -157,6 +157,7 @@ var svgPanel = d3.select("#panel").append("svg")
 .attr("width",  0).attr("height", 500)
 .style("visibility","hidden")
 .style("float", "left");
+var title = d3.select("#map").append(text).attr("x","").attr("y","").text("Online Daters vs State Average for: ");
 var div = d3.select("#map").append("div")   
 .attr("class", "hoverLabel")               
 .style("opacity", 0);
