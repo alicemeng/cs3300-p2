@@ -268,10 +268,12 @@ d3.csv("education.csv", function (error, edStates) {
 								breakupPercentage: 0,
 							};
 						});
+
 						// Store children data by state
 						childStates.forEach(function (state) {
 							stateData[state.State].children = state.Avg_per_family;
 						});
+
 						// Store education attainment data by state
 						edStates.forEach(function (location) {
 							if (stateNames.indexOf(location["Area name"]) > -1) {
@@ -284,10 +286,12 @@ d3.csv("education.csv", function (error, edStates) {
 								// stateData[location["Area name"]].FIPS = location["FIPS Code"];
 							}
 						});
+
 						// Store LGBT presence by state
 						lgbtStates.forEach(function (state) {
 							stateData[state.State].lgbt = state.Yes/100;
 						});	
+
 						// Store data for online dating users
 						adultData.forEach(function (user) {
 							var state = stateIds[user.state]["state"];
@@ -307,6 +311,7 @@ d3.csv("education.csv", function (error, edStates) {
 							};
 							userData[state].userList.push(singleUserData);
 						});
+
 						// Calculate user stats
 						for(var state in userData){
 							var metOnline = 0;
@@ -353,6 +358,30 @@ d3.csv("education.csv", function (error, edStates) {
 								return user.lgbt;
 							}) / userData[state].userList.length;
 
+							// Calculate the top 3 sites:
+							// 1. Collect all the sites for every user in the state
+							var allSitesFlat = [];
+							userData[state].userList.forEach(function (user) {
+								allSitesFlat = allSitesFlat.concat(user.sites);
+							});
+							// 2. Count up the frequency for each site
+							var siteCounts = {};
+							var siteCountsList = [];
+							allSitesFlat.forEach(function (site) {
+								if (siteCounts[site]) {
+									siteCounts[site] += 1;
+								} else {
+									siteCounts[site] = 1;
+								}
+							});
+							for (var key in siteCounts) { siteCountsList.push( { name: key, count: siteCounts.key } ); };
+							// 3. Compute the top 3 via pairwise comparisons
+							siteCountsList.sort(function (a, b) {
+								return b.count - a.count;
+							});
+							// 4. Store the result in userData
+							userData[state].sites = siteCountsList.slice(0, 3).map(function (siteObj) { return siteObj.name; });
+
 							// Update the detail pane
 							var svg = d3.select("#" + state.replace(" ", ""));
 
@@ -390,7 +419,7 @@ d3.json("id_to_state.json", function (error, stateIds) {
 
 			//Histogram temp/mock data:
 			var samplePercentages = [60, 21, 12];
-			var sampleSites = ["Facebook", "eHarmony", "Match.com"];
+			var sampleSites = /*userData[stateName].sites;*/["Facebook", "eHarmony", "Match.com"];
 
 			//Histogram
 			svg.append("text").text(stateName).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
