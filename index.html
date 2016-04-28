@@ -235,15 +235,19 @@ function getChildren(person){
 
 //Returns the average of the person's income range
 function getIncome(person){
-	if(person.inc==1){return 5000;}
-	else if(person.inc==2){return 15000;}
-	else if(person.inc==3){return 25000;}
-	else if(person.inc==4){return 35000;}
-	else if(person.inc==5){return 45000;}
-	else if(person.inc==6){return 62500;}
-	else if(person.inc==7){return 87500;}
-	else if(person.inc==8){return 125000;}
-	else{return 175000;}
+	if (person.inc) {
+		if(person.inc==1){return 5000;}
+		else if(person.inc==2){return 15000;}
+		else if(person.inc==3){return 25000;}
+		else if(person.inc==4){return 35000;}
+		else if(person.inc==5){return 45000;}
+		else if(person.inc==6){return 62500;}
+		else if(person.inc==7){return 87500;}
+		else if(person.inc==8){return 125000;}
+		else{return 175000;}	
+	} else {
+		return null;
+	}
 }
 
 // Load all the state data
