@@ -241,15 +241,19 @@ function getChildren(person){
 
 //Returns the average of the person's income range
 function getIncome(person){
-	if(person.inc==1){return 5000;}
-	else if(person.inc==2){return 15000;}
-	else if(person.inc==3){return 25000;}
-	else if(person.inc==4){return 35000;}
-	else if(person.inc==5){return 45000;}
-	else if(person.inc==6){return 62500;}
-	else if(person.inc==7){return 87500;}
-	else if(person.inc==8){return 125000;}
-	else{return 175000;}
+	if (person.inc) {
+		if(person.inc==1){return 5000;}
+		else if(person.inc==2){return 15000;}
+		else if(person.inc==3){return 25000;}
+		else if(person.inc==4){return 35000;}
+		else if(person.inc==5){return 45000;}
+		else if(person.inc==6){return 62500;}
+		else if(person.inc==7){return 87500;}
+		else if(person.inc==8){return 125000;}
+		else{return 175000;}	
+	} else {
+		return null;
+	}
 }
 
 // Load all the state data
@@ -266,12 +270,7 @@ d3.csv("education.csv", function (error, edStates) {
 								stateData[state.State] = {
 									income: state.Income,
 									children: 0.0,
-									education: {
-										lessThanHS: 0.0,
-										HSDiploma: 0.0,
-										someCollege: 0.0,
-										bachelorsPlus: 0.0
-									},
+									education: 0.0,
 									lgbt: 0.0,
 								};
 								stateNames.push(state.State);
@@ -282,12 +281,7 @@ d3.csv("education.csv", function (error, edStates) {
 									userPercentage:0.0,
 									income: 0,
 									children: 0.0,
-									education: {
-										lessThanHS: 0.0,
-										HSDiploma: 0.0,
-										someCollege: 0.0,
-										bachelorsPlus: 0.0
-									},
+									education: 0.0,
 									lgbt: 0.0,
 									topSites: [],
 									metPercentage: 0,
@@ -303,12 +297,9 @@ d3.csv("education.csv", function (error, edStates) {
 							// Store education attainment data by state
 							edStates.forEach(function (location) {
 								if (stateNames.indexOf(location["Area name"]) > -1) {
-									stateData[location["Area name"]].education = {
-										lessThanHS: location["Percent of adults with less than a high school diploma, 2010-2014"]/100,
-										HSDiploma: location["Percent of adults with a high school diploma only, 2010-2014"]/100,
-										someCollege: location["Percent of adults completing some college or associate's degree, 2010-2014"]/100,
-										bachelorsPlus: location["Percent of adults with a bachelor's degree or higher, 2010-2014"]/100
-									};
+									stateData[location["Area name"]].education = 
+										(Number(location["Percent of adults completing some college or associate's degree, 2010-2014"]) +
+										Number(location["Percent of adults with a bachelor's degree or higher, 2010-2014"]))/100;
 								}
 							});
 
@@ -325,12 +316,8 @@ d3.csv("education.csv", function (error, edStates) {
 									sites:getSites(user),
 									income:getIncome(user),
 									numberOfChildren:getChildren(user),
-									educationLevel:{
-										lessThanHS: user.educ2==1||user.educ2==2,
-										HSDiploma: user.educ2==3,
-										someCollege: user.educ2 == 4 || user.educ2 == 5,
-										bachelorsPlus: user.educ2 == 6 || user.educ2 == 7 || user.educ2 == 8
-									},
+									educationLevel: user.educ2 == 4 || user.educ2 == 5 ||
+										user.educ2 == 6 || user.educ2 == 7 || user.educ2 == 8,
 									lgbt: user.lgbt==2 || user.lgbt==3 || user.lgbt == 4,
 									metPartnerOnline: user.rel1 == 1,
 									electronicBreakup: user.breaka==1||user.breakb==1
@@ -367,21 +354,10 @@ d3.csv("education.csv", function (error, edStates) {
 									return user.numberOfChildren;
 								});
 
-								// Calculate the percentages of education attainment for users
-								userData[state].education = {
-									lessThanHS: d3.sum(userData[state].userList, function (user) {
-										return user.educationLevel.lessThanHS;
-									}) / userData[state].userList.length,
-									HSDiploma: d3.sum(userData[state].userList, function (user) {
-										return user.educationLevel.HSDiploma;
-									}) / userData[state].userList.length,
-									someCollege: d3.sum(userData[state].userList, function (user) {
-										return user.educationLevel.someCollege;
-									}) / userData[state].userList.length,
-									bachelorsPlus: d3.sum(userData[state].userList, function (user) {
-										return user.educationLevel.bachelorsPlus;
-									}) / userData[state].userList.length,
-								};
+								// Calculate the percentage of some college-level education attainment for users
+								userData[state].education = d3.sum(userData[state].userList, function (user) {
+										return user.educationLevel;
+								}) / userData[state].userList.length;
 
 								// Calculate the percentage of users who identify as LGBT
 								userData[state].lgbt = d3.sum(userData[state].userList, function (user) {
@@ -439,12 +415,12 @@ d3.csv("education.csv", function (error, edStates) {
 										if (topSites[s]) {
 											hist.append("rect").attr("class", "bar")
 												.attr("y", yCoor)
-												.attr("x", 220 - xScale(sitePercentages[s]))
+												.attr("x", 230 - xScale(sitePercentages[s]))
 												.attr("height", 35)
 												.attr("width", (xScale(sitePercentages[s])));
 											hist.append("text").attr("class", "histLabel").attr("y", yCoor+25).attr("x", 30).text(topSites[s]);
 											hist.append("circle").attr("cx", 250).attr("cy", yCoor+15).attr("r", 15).attr("class", "rank");
-											hist.append("text").attr("x", 240).attr("y", yCoor+20).text(s+1).attr("class", "textRank");
+											hist.append("text").attr("x", 245).attr("y", yCoor+22).text(s+1).attr("class", "textRank");
 											hist.append("text").attr("x", 270).attr("y", yCoor+20).text(p0(sitePercentages[s]) + " of users");
 
 											yCoor += 50;
@@ -497,9 +473,9 @@ d3.csv("education.csv", function (error, edStates) {
 										        "Users: " + formatIncome(userData[stateName].income);
 										break;
 									case (filters.EDUCATION):
-										inner = stateAbbrev + ": " + p0(stateData[stateName].education.someCollege) +
+										inner = stateAbbrev + ": " + p0(stateData[stateName].education) +
 												"<br>" +
-												"Users: " + p0(userData[stateName].education.someCollege);
+												"Users: " + p0(userData[stateName].education);
 										break;
 									case (filters.CHILDREN):
 										inner = stateAbbrev + ": " + sig2(stateData[stateName].children) +
@@ -526,27 +502,6 @@ d3.csv("education.csv", function (error, edStates) {
 								.duration(500)      
 								.style("opacity", 0);
 							});
-
-							// Calculate the percentages of education attainment for users
-							userData[state].education = {
-								lessThanHS: d3.sum(userData[state].userList, function (user) {
-									return user.educationLevel.lessThanHS;
-								}) / userData[state].userList.length,
-								HSDiploma: d3.sum(userData[state].userList, function (user) {
-									return user.educationLevel.HSDiploma;
-								}) / userData[state].userList.length,
-								someCollege: d3.sum(userData[state].userList, function (user) {
-									return user.educationLevel.someCollege;
-								}) / userData[state].userList.length,
-								bachelorsPlus: d3.sum(userData[state].userList, function (user) {
-									return user.educationLevel.bachelorsPlus;
-								}) / userData[state].userList.length,
-							};
-
-							// Calculate the percentage of users who identify as LGBT
-							userData[state].lgbt = d3.sum(userData[state].userList, function (user) {
-								return user.lgbt;
-							}) / userData[state].userList.length;
 
 							/************* Choropleth Scaling *************/
 							//User Scale::
@@ -591,7 +546,7 @@ d3.csv("education.csv", function (error, edStates) {
 							var maxEdu = -100000;
 							var minEdu = 1000000000000;
 							for(state in stateData){
-								var currEdu = Math.abs(stateData[state].education.someCollege - userData[state].education.someCollege);
+								var currEdu = Math.abs(stateData[state].education - userData[state].education);
 								if (currEdu > maxEdu) 	maxEdu = currEdu;
 								if (currEdu < minEdu)	minEdu = currEdu;
 							}
@@ -743,7 +698,7 @@ d3.csv("education.csv", function (error, edStates) {
 								tempStates.style("fill", function (eState) {
 									if (eState.id>56) return "#000";
 									var eduStateName = stateIds[eState.id]["state"];
-									var eduValue = Math.abs(stateData[eduStateName].education.someCollege-userData[eduStateName].education.someCollege);
+									var eduValue = Math.abs(stateData[eduStateName].education - userData[eduStateName].education);
 									return eduScale(eduValue);
 								});
 							});
@@ -799,9 +754,11 @@ d3.json("id_to_state.json", function (error, stateIds) {
 			// Ids cannot have spaces
 			var id = stateName.replace(" ", "");
 			var svg = d3.select("#panel").append("svg")
-			.attr("width", 375).attr("height", 500)
+			.attr("width", 375).attr("height", 455)
 			.style("visibility","hidden")
 			.style("position", "absolute")
+			.style("padding-top", "35px")
+			.style("padding-bottom", "10px")
 			.attr("id", id);
 		}
 	});
