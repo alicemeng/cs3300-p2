@@ -440,15 +440,15 @@ d3.csv("education.csv", function (error, edStates) {
 
 								// Positive Fact
 								svg.append("text").html(p0(userData[state].metPercentage))
-								   .attr("x", 30).attr("y", 330).attr("class", "posNumber");
+								   .attr("x", 50).attr("y", 330).attr("class", "posNumber");
 								svg.append("text").html("met a significant other online")
-								   .attr("x", 120).attr("y", 325).attr("class", "posText");
+								   .attr("x", 170).attr("y", 325).attr("class", "posText");
 
 								// Negative Fact
 								svg.append("text").html(p0(userData[state].breakupPercentage))
-								   .attr("x", 30).attr("y", 400).attr("class", "negNumber");
-								svg.append("text").html("have broken up with their partner electronically")
-								   .attr("x", 120).attr("y", 400).attr("class", "negText");
+								   .attr("x", 50).attr("y", 400).attr("class", "negNumber");
+								svg.append("text").html("have broken up electronically")
+								   .attr("x", 170).attr("y", 400).attr("class", "negText");
 							}
 								
 							//Load Map
