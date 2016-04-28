@@ -273,6 +273,7 @@ d3.csv("education.csv", function (error, edStates) {
 								// Initialize all user fields
 								userData[state.State] = {
 									userList: [],
+									userPercentage:0.0,
 									income: 0,
 									children: 0.0,
 									education: {
@@ -314,6 +315,7 @@ d3.csv("education.csv", function (error, edStates) {
 							adultData.forEach(function (user) {
 								var state = stateIds[user.state]["state"];
 								var singleUserData = {
+									isUser: user.date1a==1,
 									sites:getSites(user),
 									income:getIncome(user),
 									numberOfChildren:getChildren(user),
@@ -334,16 +336,20 @@ d3.csv("education.csv", function (error, edStates) {
 							for(var state in userData){
 								var metOnline = 0;
 								var eBreakup = 0;
+								var userNumber=0;
 								var i;
 								var s=userData[state];
 								for(i=0;i<s.userList.length;i++){
 									if(s.userList[i].metPartnerOnline){metOnline++;}
 									if(s.userList[i].electronicBreakup){eBreakup++;}
+									if(s.userList[i].isUser){userNumber++;}
 								}
 								var percentMet = (metOnline/i);
 								var percentBroken = (eBreakup/i);
+								var percentUses = (userNumber/i);
 								userData[state].metPercentage = percentMet;
 								userData[state].breakupPercentage = percentBroken;
+								userData[state].userPercentage = percentUses;
 
 								// Calculate median income
 								userData[state].income = d3.median(userData[state].userList, function (user) {
