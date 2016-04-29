@@ -135,6 +135,7 @@
 		font-weight: 700;
 		font-size: 18px;
 		text-transform: capitalize;
+		text-align: center;
 	}
 </style>
 </head>
@@ -598,16 +599,16 @@ d3.csv("education.csv", function (error, edStates) {
 
 							/************* Map Titles  *************/
 							var userTitle = svgMap.append("text").style("visibility", "visible").attr("class", "mapTitle")
-								.text("Percentage of state residents who online date").attr("x", 90).attr("y", 30);
+								.text("Percentage of state residents who use online dating").attr("x", 90).attr("y", 30);
 							var currTitle = userTitle;
 							var incomeTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
-								.text("State resdient median income VS. online dater median income").attr("x", 90).attr("y", 30);
+								.text("State resident median income VS. online dater median income").attr("x", 90).attr("y", 30);
 							var eduTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
-								.text("State resident college education VS. online dater college education").attr("x", 90).attr("y", 30);
+								.text("State residents college education VS. online dater college education").attr("x", 90).attr("y", 30);
 							var childTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
 								.text("State resident number of children VS. online dater number of children").attr("x", 90).attr("y", 30);
 							var lgbtTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
-								.text("State residents in the LGBT community VS. online daters in LGBT community").attr("x", 90).attr("y", 30);
+								.text("State residents in LGBT community VS. online daters in LGBT community").attr("x", 90).attr("y", 30);
 							/************* Legends *************/
 							//User Legend
 							var userLegend = svgMap.append("g").style("visibility", "visible");
