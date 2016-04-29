@@ -5,3 +5,5 @@ Median household income by state (income.csv): http://kff.org/other/state-indica
 Children per family by state (children.csv): https://www.census.gov/population/socdemo/hh-fam/tabST-F1-2000.pdf
 Education attainment by state (education.csv): http://www.ers.usda.gov/dataFiles/CountyLevelDatasets/Education.xls
 State id to state name and abbreviation (id_to_state.json): https://gist.githubusercontent.com/mbostock/4090846/raw/1ae28fbe30913c837afa8261bb94d77bba459ebe/us-state-names.tsv
+d3: http://d3js.org/d3.v3.min.js
+d3's topojson: http://d3js.org/topojson.v1.min.js
