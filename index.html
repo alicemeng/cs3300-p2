@@ -323,40 +323,43 @@ d3.csv("education.csv", function (error, edStates) {
 							for(var state in userData){
 								var metOnline = 0;
 								var eBreakup = 0;
-								var userNumber=0;
+								var numUsers=0;
 								var i;
 								var s=userData[state];
 								for(i=0;i<s.userList.length;i++){
 									if(s.userList[i].metPartnerOnline){metOnline++;}
 									if(s.userList[i].electronicBreakup){eBreakup++;}
-									if(s.userList[i].isUser){ userNumber++;}
+									if(s.userList[i].isUser){ numUsers++;}
 								}
 								var percentMet = (metOnline/i);
 								var percentBroken = (eBreakup/i);
-								var percentUses = (userNumber/i);
+								var percentUses = (numUsers/i);
 								userData[state].metPercentage = percentMet;
 								userData[state].breakupPercentage = percentBroken;
 								userData[state].userPercentage = percentUses;
 
+								// Filter out an array of just users
+								var users = userData[state].userList.filter(function (user) { return user.isUser; });
+
 								// Calculate median income
-								userData[state].income = d3.median(userData[state].userList, function (user) {
+								userData[state].income = d3.median(users, function (user) {
 									return user.income;
 								});
 
 								// Calculate the mean number of children per household
-								userData[state].children = d3.mean(userData[state].userList, function (user) {
+								userData[state].children = d3.mean(users, function (user) {
 									return user.numberOfChildren;
 								});
 
-								// Calculate the percentage of some college-level education attainment for users
-								userData[state].education = d3.sum(userData[state].userList, function (user) {
+								// Calculate the frequency of some college-level education attainment for users
+								userData[state].education = d3.sum(users, function (user) {
 										return user.educationLevel;
-								}) / userData[state].userList.length;
+								}) / users.length;
 
 								// Calculate the percentage of users who identify as LGBT
-								userData[state].lgbt = d3.sum(userData[state].userList, function (user) {
+								userData[state].lgbt = d3.sum(users, function (user) {
 									return user.lgbt;
-								}) / userData[state].userList.length;
+								}) / users.length;
 
 								// Calculate the top 3 sites:
 								// 1. Collect all the sites for every user in the state
@@ -381,7 +384,7 @@ d3.csv("education.csv", function (error, edStates) {
 								});
 								// 4. Store the result in userData
 								userData[state].sites = siteCountsList.slice(0, 3).map(function (siteObj) {
-									return { name: siteObj.name, frequency: siteObj.count / allSitesFlat.length };
+									return { name: siteObj.name, frequency: siteObj.count / users.length };
 								});
 
 								/************* Update the detail pane *************/
