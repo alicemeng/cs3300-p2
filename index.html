@@ -469,26 +469,32 @@ d3.csv("education.csv", function (error, edStates) {
 								.style("opacity", .9);
 								var stateName = stateIds[d.id]["state"];
 								var inner = "";
+								var insufficient = "Insufficient Data";
 								switch (currFilter) {
 									case (filters.INCOME):
+										var userIncome = isNaN(userData[stateName].income) ? insufficient :
+											formatIncome(userData[stateName].income);
 										inner = stateAbbrev + ": " + formatIncome(stateData[stateName].income) +
 												"<br>" +
-										        "Users: " + formatIncome(userData[stateName].income);
+										        "Users: " + userIncome;
 										break;
 									case (filters.EDUCATION):
+										var userEd = isNaN(userData[stateName].education) ? insufficient : p0(userData[stateName].education);
 										inner = stateAbbrev + ": " + p0(stateData[stateName].education) +
 												"<br>" +
-												"Users: " + p0(userData[stateName].education);
+												"Users: " + userEd;
 										break;
 									case (filters.CHILDREN):
+										var userChild = isNaN(userData[stateName].children) ? insufficient : sig2(userData[stateName].children);
 										inner = stateAbbrev + ": " + sig2(stateData[stateName].children) +
 												"<br>" +
-												"Users: " + sig2(userData[stateName].children);
+												"Users: " + userChild;
 										break;
 									case (filters.LGBT):
+										var userLgbt = isNaN(userData[stateName].lgbt) ? insufficient : p0(userData[stateName].lgbt);
 										inner = stateAbbrev + ": " + p0(stateData[stateName].lgbt) +
 												"<br>" +
-												"Users: " + p0(userData[stateName].lgbt);
+												"Users: " + userLgbt;
 										break;
 									default:
 										inner = p0(userData[stateName].userPercentage) + " of " + stateAbbrev + 
@@ -668,6 +674,7 @@ d3.csv("education.csv", function (error, edStates) {
 									if (uState.id>56) return "#000";
 									var userStateName = stateIds[uState.id]["state"];
 									var userValue = userData[userStateName].userPercentage;
+									if (isNaN(userValue)) return "#ffffff";
 									return userScale(userValue);
 								});
 							});
@@ -685,6 +692,7 @@ d3.csv("education.csv", function (error, edStates) {
 									if (state.id>56) return "#000";
 									var stateName = stateIds[state.id]["state"];
 									var incomeValue = Math.abs(stateData[stateName].income-userData[stateName].income);
+									if (isNaN(incomeValue)) return "#ffffff";
 									return incomeScale(incomeValue);
 								});
 							});
@@ -702,6 +710,7 @@ d3.csv("education.csv", function (error, edStates) {
 									if (eState.id>56) return "#000";
 									var eduStateName = stateIds[eState.id]["state"];
 									var eduValue = Math.abs(stateData[eduStateName].education - userData[eduStateName].education);
+									if (isNaN(eduValue)) return "#ffffff";
 									return eduScale(eduValue);
 								});
 							});
@@ -719,6 +728,7 @@ d3.csv("education.csv", function (error, edStates) {
 									if (cState.id>56) return "#000";
 									var childStateName = stateIds[cState.id]["state"];
 									var childValue = Math.abs(stateData[childStateName].children-userData[childStateName].children);
+									if (isNaN(childValue)) return "#ffffff";
 									return childScale(childValue);
 								});							
 
