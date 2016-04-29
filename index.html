@@ -188,6 +188,7 @@ var states = {};
 var p0 = d3.format("%");
 var sig2 = d3.format(".2r");
 var formatIncome = d3.format("$,");
+var formatScaleIncome = d3.format("$,.3r")
 
 // Returns the corresponding online dating site when given a number
 function numToSite(num){
@@ -609,6 +610,7 @@ d3.csv("education.csv", function (error, edStates) {
 								.text("State resident number of children VS. online dater number of children").attr("x", 90).attr("y", 30);
 							var lgbtTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
 								.text("State residents in LGBT community VS. online daters in LGBT community").attr("x", 90).attr("y", 30);
+
 							/************* Legends *************/
 							//User Legend
 							var userLegend = svgMap.append("g").style("visibility", "visible");
@@ -627,7 +629,7 @@ d3.csv("education.csv", function (error, edStates) {
 							incomeLegend.append("text").text("Insufficient Data").attr("x", incomeX-95).attr("y", 485);
 							for (var inc=0; inc<4; inc++){
 								incomeLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", incomeColor[inc]).attr("x", incomeX).attr("y", 458).style("opacity", 0.7);
-								incomeLegend.append("text").attr("x", incomeX).attr("y", 485).html(formatIncome(incomeDomain[inc]));
+								incomeLegend.append("text").attr("x", incomeX).attr("y", 485).html(formatScaleIncome(incomeDomain[inc]));
 								incomeX+=70;
 							}
 
