@@ -133,10 +133,14 @@
 	}
 	text.mapTitle{
 		fill: #404040;
-		font-weight: 700;
+		font-weight: 500;
 		font-size: 18px;
+	}
+	text.mapHeader {
+		fill: #404040;
+		font-weight: 700;
+		font-size: 22px;
 		text-transform: capitalize;
-		text-align: center;
 	}
 </style>
 </head>
@@ -600,17 +604,19 @@ d3.csv("education.csv", function (error, edStates) {
 							var LGBTscale = d3.scale.linear().domain(lgbtDomain).range(lgbtColor);
 
 							/************* Map Titles  *************/
-							var userTitle = svgMap.append("text").style("visibility", "visible").attr("class", "mapTitle")
-								.text("Percentage of state residents who use online dating").attr("x", 90).attr("y", 30);
+							var headTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapHeader")
+								.text("State residents VS. Online Daters").attr("x", 210).attr("y", 40);
+							var userTitle = svgMap.append("text").style("visibility", "visible").attr("class", "mapHeader")
+								.text("Online dating usage").attr("x", 260).attr("y", 40);
 							var currTitle = userTitle;
 							var incomeTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
-								.text("State resident median income VS. online dater median income").attr("x", 90).attr("y", 30);
+								.text("Median income").attr("x", 300).attr("y", 60);
 							var eduTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
-								.text("State residents college education VS. online dater college education").attr("x", 90).attr("y", 30);
+								.text("College education attainment").attr("x", 265).attr("y", 60);
 							var childTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
-								.text("State resident number of children VS. online dater number of children").attr("x", 90).attr("y", 30);
+								.text("Number of children").attr("x", 290).attr("y", 60);
 							var lgbtTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
-								.text("State residents in LGBT community VS. online daters in LGBT community").attr("x", 90).attr("y", 30);
+								.text("LGBT community").attr("x", 295).attr("y", 60);
 
 							/************* Legends *************/
 							//User Legend
@@ -622,6 +628,7 @@ d3.csv("education.csv", function (error, edStates) {
 								userLegend.append("text").attr("x", userX).attr("y", 485).html(p0(userDomain[usr]));
 								userX+=70;
 							}
+
 							// Income Legend:
 							var incomeLegend = svgMap.append("g").style("visibility", "hidden");
 							var incomeX = 390;
@@ -681,6 +688,7 @@ d3.csv("education.csv", function (error, edStates) {
 								currLegend = userLegend;
 								currTitle.style("visibility", "hidden");
 								userTitle.style("visibility", "visible");
+								headTitle.style("visibility", "hidden");
 								currTitle = userTitle;
 								tempStates.style("fill", function (uState) {
 									if (uState.id>56) return "#000";
@@ -698,6 +706,7 @@ d3.csv("education.csv", function (error, edStates) {
 								incomeLegend.style("visibility", "visible");
 								currTitle.style("visibility", "hidden");
 								incomeTitle.style("visibility", "visible");
+								headTitle.style("visibility", "visible");
 								currTitle = incomeTitle;
 								currLegend = incomeLegend;
 								tempStates.style("fill", function (state) {
@@ -717,6 +726,7 @@ d3.csv("education.csv", function (error, edStates) {
 								currLegend = eduLegend;
 								currTitle.style("visibility", "hidden");
 								eduTitle.style("visibility", "visible");
+								headTitle.style("visibility", "visible");
 								currTitle = eduTitle;
 								tempStates.style("fill", function (eState) {
 									if (eState.id>56) return "#000";
@@ -735,6 +745,7 @@ d3.csv("education.csv", function (error, edStates) {
 								currLegend = childLegend;
 								currTitle.style("visibility", "hidden");
 								childTitle.style("visibility", "visible");
+								headTitle.style("visibility", "visible");
 								currTitle = childTitle;
 								tempStates.style("fill", function (cState) {
 									if (cState.id>56) return "#000";
@@ -754,6 +765,7 @@ d3.csv("education.csv", function (error, edStates) {
 								currLegend = lgbtLegend;
 								currTitle.style("visibility", "hidden");
 								lgbtTitle.style("visibility", "visible");
+								headTitle.style("visibility", "visible");
 								currTitle = lgbtTitle;
 								tempStates.style("fill", function (lState) {
 									if (lState.id>56) return "#000";
