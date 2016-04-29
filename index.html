@@ -402,7 +402,7 @@ d3.csv("education.csv", function (error, edStates) {
 								// Histogram
 								svg.append("text").text(state).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
 								var hist = svg.append("svg").attr("width", 350).attr("height", 250).attr("x", 20).attr("y", 80);
-								hist.append("text").text("Top 3 Online Dating Sites").attr("x", 30).attr("y", 15).attr("class", "topThree");
+								hist.append("text").text("Top 3 Online Dating Sites*").attr("x", 30).attr("y", 15).attr("class", "topThree");
 
 								var xScale = d3.scale.linear().domain([0, 1]).range([20, 200]);
 								var yCoor = 55;
@@ -430,7 +430,7 @@ d3.csv("education.csv", function (error, edStates) {
 										}
 									}	
 								}
-
+ 
 								// Positive Fact
 								svg.append("text").html(p0(userData[state].metPercentage))
 								   .attr("x", 50).attr("y", 330).attr("class", "posNumber");
@@ -442,6 +442,8 @@ d3.csv("education.csv", function (error, edStates) {
 								   .attr("x", 50).attr("y", 400).attr("class", "negNumber");
 								svg.append("text").html("have broken up electronically")
 								   .attr("x", 170).attr("y", 400).attr("class", "negText");
+
+								svg.append("text").html("*Sum of percentages may exceed 100% as users may use multiple dating sites").attr("x", 50).attr("y", 440).attr("class", "negText").attr("font-size", "10px");
 							}
 
 							// Load map and display hover data
@@ -767,10 +769,10 @@ d3.json("id_to_state.json", function (error, stateIds) {
 			// Ids cannot have spaces
 			var id = stateName.replace(" ", "");
 			var svg = d3.select("#panel").append("svg")
-			.attr("width", 375).attr("height", 455)
+			.attr("width", 375).attr("height", 463)
 			.style("visibility","hidden")
 			.style("position", "absolute")
-			.style("padding-top", "35px")
+			.style("padding-top", "27px")
 			.style("padding-bottom", "10px")
 			.attr("id", id);
 		}
