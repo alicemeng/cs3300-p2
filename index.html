@@ -403,20 +403,23 @@ d3.csv("education.csv", function (error, edStates) {
 								// Histogram
 								svg.append("text").text(state).attr("x", 50).attr("y", 50).attr("class", "stateHeader");
 								var hist = svg.append("svg").attr("width", 350).attr("height", 250).attr("x", 20).attr("y", 80);
-								hist.append("text").text("Top 3 Online Dating Sites*").attr("x", 30).attr("y", 15).attr("class", "topThree");
 
 								var xScale = d3.scale.linear().domain([0, 1]).range([20, 200]);
 								var yCoor = 55;
 								if (topSites.length == 0) {
+
+								
 									hist.append("text").attr("class", "histLabel")
 										.attr("y", yCoor).attr("x", 30)
 										.text("Data for online dating sites");
 									hist.append("text").attr("class", "histLabel")
 										.attr("y", yCoor + 25).attr("x", 30)
 										.text("in " + state + " is unavailable.");
+
 								} else {
 									for (var s = 0; s < 3; s++){
 										if (topSites[s]) {
+											hist.append("text").text("Top 3 Online Dating Sites*").attr("x", 30).attr("y", 15).attr("class", "topThree");
 											hist.append("rect").attr("class", "bar")
 												.attr("y", yCoor)
 												.attr("x", 230 - xScale(sitePercentages[s]))
@@ -426,6 +429,7 @@ d3.csv("education.csv", function (error, edStates) {
 											hist.append("circle").attr("cx", 250).attr("cy", yCoor+15).attr("r", 15).attr("class", "rank");
 											hist.append("text").attr("x", 245).attr("y", yCoor+22).text(s+1).attr("class", "textRank");
 											hist.append("text").attr("x", 270).attr("y", yCoor+20).text(p0(sitePercentages[s]) + " of users");
+											svg.append("text").html("*Sum of percentages may exceed 100% as users may use multiple dating sites").attr("x", 50).attr("y", 440).attr("class", "negText").attr("font-size", "10px");
 
 											yCoor += 50;
 										}
@@ -444,7 +448,7 @@ d3.csv("education.csv", function (error, edStates) {
 								svg.append("text").html("have broken up electronically")
 								   .attr("x", 170).attr("y", 400).attr("class", "negText");
 
-								svg.append("text").html("*Sum of percentages may exceed 100% as users may use multiple dating sites").attr("x", 50).attr("y", 440).attr("class", "negText").attr("font-size", "10px");
+								
 							}
 
 							// Load map and display hover data
