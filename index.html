@@ -120,10 +120,11 @@
 	div.hoverLabel {   
 		position: absolute;           
 		text-align: center;           
-		width: 90px;                  
+		width: 125px;                  
 		height: 50px;                 
-		padding: 2px;             
-		font: 12px sans-serif;        
+		padding: 1px;    
+		font-family: 'Open Sans Condensed', 'sans-serif'         
+		font-size: 6px;       
 		background: #aaa;   
 		opacity: .7
 		border: 0px;      
@@ -476,25 +477,25 @@ d3.csv("education.csv", function (error, edStates) {
 											formatIncome(userData[stateName].income);
 										inner = stateAbbrev + ": " + formatIncome(stateData[stateName].income) +
 												"<br>" +
-										        "Users: " + userIncome;
+										        "Daters: " + userIncome;
 										break;
 									case (filters.EDUCATION):
 										var userEd = isNaN(userData[stateName].education) ? insufficient : p0(userData[stateName].education);
 										inner = stateAbbrev + ": " + p0(stateData[stateName].education) +
 												"<br>" +
-												"Users: " + userEd;
+												"Daters: " + userEd;
 										break;
 									case (filters.CHILDREN):
 										var userChild = isNaN(userData[stateName].children) ? insufficient : sig2(userData[stateName].children);
 										inner = stateAbbrev + ": " + sig2(stateData[stateName].children) +
 												"<br>" +
-												"Users: " + userChild;
+												"Daters: " + userChild;
 										break;
 									case (filters.LGBT):
 										var userLgbt = isNaN(userData[stateName].lgbt) ? insufficient : p0(userData[stateName].lgbt);
 										inner = stateAbbrev + ": " + p0(stateData[stateName].lgbt) +
 												"<br>" +
-												"Users: " + userLgbt;
+												"Daters: " + userLgbt;
 										break;
 									default:
 										inner = p0(userData[stateName].userPercentage) + " of " + stateAbbrev + 
@@ -502,8 +503,8 @@ d3.csv("education.csv", function (error, edStates) {
 										break;
 								}
 								div.html(inner)
-								.style("left", (d3.event.pageX - 210) + "px")     
-								.style("top", (d3.event.pageY - 120) + "px");  
+								.style("left", (d3.event.pageX - 220) + "px")     
+								.style("top", (d3.event.pageY - 170) + "px");  
 							})
 							.on('mouseout', function(d, i) {
 								d3.selectAll('path').style({'fill-opacity':.7});
