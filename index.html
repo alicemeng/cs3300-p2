@@ -435,11 +435,11 @@ d3.csv("education.csv", function (error, edStates) {
 											hist.append("circle").attr("cx", 250).attr("cy", yCoor+15).attr("r", 15).attr("class", "rank");
 											hist.append("text").attr("x", 245).attr("y", yCoor+22).text(s+1).attr("class", "textRank");
 											hist.append("text").attr("x", 270).attr("y", yCoor+20).text(p0(sitePercentages[s]) + " of users");
-											svg.append("text").html("*Sum of percentages may exceed 100% as users may use multiple dating sites").attr("x", 50).attr("y", 440).attr("class", "negText").attr("font-size", "10px");
-
 											yCoor += 50;
 										}
 									}	
+									svg.append("text").html("*Sum of percentages may exceed 100% as users may use multiple dating sites").attr("x", 50).attr("y", 440).attr("class", "negText").attr("font-size", "10px");
+
 								}
  
 								// Positive Fact
