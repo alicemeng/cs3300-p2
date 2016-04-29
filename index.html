@@ -613,57 +613,57 @@ d3.csv("education.csv", function (error, edStates) {
 							//User Legend
 							var userLegend = svgMap.append("g").style("visibility", "visible");
 							var userX = 390;
-							userLegend.append("text").text("Percentage of Online Dating Users").attr("x", userX).attr("y", 452);
+							userLegend.append("text").text("Percentage of Online Dating Users").attr("x", userX).attr("y", 459);
 							for (var usr=0; usr<4; usr++){
-								userLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", userColor[usr]).attr("x", userX).attr("y", 458).style("opacity", 0.7);
-								userLegend.append("text").attr("x", userX).attr("y", 485).html(p0(userDomain[usr]));
+								userLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", userColor[usr]).attr("x", userX).attr("y", 465).style("opacity", 0.7);
+								userLegend.append("text").attr("x", userX).attr("y", 492).html(p0(userDomain[usr]));
 								userX+=70;
 							}
 							// Income Legend:
 							var incomeLegend = svgMap.append("g").style("visibility", "hidden");
 							var incomeX = 390;
-							incomeLegend.append("text").text("Difference in median incomes").attr("x", incomeX-95).attr("y", 452);
-							incomeLegend.append("rect").attr("x", incomeX-95).attr("y", 458).attr("width", 95).attr("height", 12).style("stroke", "#ccc").style("fill", "#ffffff");
-							incomeLegend.append("text").text("Insufficient Data").attr("x", incomeX-95).attr("y", 485);
+							incomeLegend.append("text").text("Difference in median incomes").attr("x", incomeX-95).attr("y", 459);
+							incomeLegend.append("rect").attr("x", incomeX-95).attr("y", 465).attr("width", 95).attr("height", 12).style("stroke", "#ccc").style("fill", "#ffffff");
+							incomeLegend.append("text").text("Insufficient Data").attr("x", incomeX-95).attr("y", 492);
 							for (var inc=0; inc<4; inc++){
-								incomeLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", incomeColor[inc]).attr("x", incomeX).attr("y", 458).style("opacity", 0.7);
-								incomeLegend.append("text").attr("x", incomeX).attr("y", 485).html(formatIncome(incomeDomain[inc]));
+								incomeLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", incomeColor[inc]).attr("x", incomeX).attr("y", 465).style("opacity", 0.7);
+								incomeLegend.append("text").attr("x", incomeX).attr("y", 492).html(formatIncome(incomeDomain[inc]));
 								incomeX+=70;
 							}
 
 							// Edu Legend
 							var eduLegend = svgMap.append("g").style("visibility", "hidden");
 							var eduX = 390;
-							eduLegend.append("text").text("Difference in college education").attr("x", eduX-95).attr("y", 452);
-							eduLegend.append("rect").attr("x", eduX-95).attr("y", 458).attr("width", 95).attr("height", 12).style("stroke", "#ccc").style("fill", "#ffffff");
-							eduLegend.append("text").text("Insufficient Data").attr("x", eduX-95).attr("y", 485);
+							eduLegend.append("text").text("Difference in college education").attr("x", eduX-95).attr("y", 459);
+							eduLegend.append("rect").attr("x", eduX-95).attr("y", 465).attr("width", 95).attr("height", 12).style("stroke", "#ccc").style("fill", "#ffffff");
+							eduLegend.append("text").text("Insufficient Data").attr("x", eduX-95).attr("y", 492);
 							for (var edu=0; edu<4; edu++){
-								eduLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", eduColor[edu]).attr("x", eduX).attr("y", 458).style("opacity", 0.7);
-								eduLegend.append("text").attr("x", eduX).attr("y", 485).html(p0(eduDomain[edu]));
+								eduLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", eduColor[edu]).attr("x", eduX).attr("y", 465).style("opacity", 0.7);
+								eduLegend.append("text").attr("x", eduX).attr("y", 492).html(p0(eduDomain[edu]));
 								eduX+=70;
 							}
 							
 							// Child Legend
 							var childLegend = svgMap.append("g").style("visibility", "hidden");
 							var childX = 390;
-							childLegend.append("text").text("Difference in average number of children").attr("x", childX-95).attr("y", 452);
-							childLegend.append("rect").attr("x", childX-95).attr("y", 458).attr("width", 95).attr("height", 12).style("stroke", "#ccc").style("fill", "#ffffff");
-							childLegend.append("text").text("Insufficient Data").attr("x", childX-95).attr("y", 485);		
+							childLegend.append("text").text("Difference in average number of children").attr("x", childX-95).attr("y", 459);
+							childLegend.append("rect").attr("x", childX-95).attr("y", 465).attr("width", 95).attr("height", 12).style("stroke", "#ccc").style("fill", "#ffffff");
+							childLegend.append("text").text("Insufficient Data").attr("x", childX-95).attr("y", 492);		
 							for (var chi=0; chi<4; chi++){
-								childLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", childColor[chi]).attr("x", childX).attr("y", 458).style("opacity", 0.7);
-								childLegend.append("text").attr("x", childX).attr("y", 485).html(sig2(childDomain[chi]));
+								childLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", childColor[chi]).attr("x", childX).attr("y", 465).style("opacity", 0.7);
+								childLegend.append("text").attr("x", childX).attr("y", 492).html(sig2(childDomain[chi]));
 								childX+=70;
 							}
 
 							// LGBT Legend
 							var lgbtLegend = svgMap.append("g").style("visibility", "hidden");
 							var lgbtX = 390;
-							lgbtLegend.append("text").text("Difference in percentage of those in the LGBT community").attr("x", lgbtX-95).attr("y", 452);
-							lgbtLegend.append("rect").attr("x", lgbtX-95).attr("y", 458).attr("width", 95).attr("height", 12).style("stroke", "#ccc").style("fill", "#ffffff");
-							lgbtLegend.append("text").text("Insufficient Data").attr("x", lgbtX-95).attr("y", 485);
+							lgbtLegend.append("text").text("Difference in percentage of those in the LGBT community").attr("x", lgbtX-95).attr("y", 459);
+							lgbtLegend.append("rect").attr("x", lgbtX-95).attr("y", 465).attr("width", 95).attr("height", 12).style("stroke", "#ccc").style("fill", "#ffffff");
+							lgbtLegend.append("text").text("Insufficient Data").attr("x", lgbtX-95).attr("y", 492);
 							for (var lg=0; lg<4; lg++){
-								lgbtLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", lgbtColor[lg]).attr("x", lgbtX).attr("y", 458).style("opacity", 0.7);
-								lgbtLegend.append("text").attr("x", lgbtX).attr("y", 485).html(p0(lgbtDomain[lg]));
+								lgbtLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", lgbtColor[lg]).attr("x", lgbtX).attr("y", 465).style("opacity", 0.7);
+								lgbtLegend.append("text").attr("x", lgbtX).attr("y", 492).html(p0(lgbtDomain[lg]));
 								lgbtX+=70;
 							}
 
