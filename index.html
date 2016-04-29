@@ -130,6 +130,12 @@
 		border-radius: 5px;           
 		pointer-events: none;         
 	}
+	text.mapTitle{
+		fill: #404040;
+		font-weight: 700;
+		font-size: 18px;
+		text-transform: capitalize;
+	}
 </style>
 </head>
 
@@ -169,7 +175,7 @@ var filters = {
 };
 var currFilter = filters.NONE;
 // Geographic map setup
-var projection = d3.geo.albersUsa().scale(860).translate([370, 280]);
+var projection = d3.geo.albersUsa().scale(860).translate([360, 245]);
 var path = d3.geo.path().projection(projection);
 // Data collection variables
 var stateData = {};
@@ -584,53 +590,65 @@ d3.csv("education.csv", function (error, edStates) {
 							var lgbtDomain = [minLGBT, midLGBT1, midLGBT2, maxLGBT];							
 							var LGBTscale = d3.scale.linear().domain(lgbtDomain).range(lgbtColor);
 
+							/************* Map Titles  *************/
+							var userTitle = svgMap.append("text").style("visibility", "visible").attr("class", "mapTitle")
+								.text("Percentage of state residents who online date").attr("x", 90).attr("y", 30);
+							var currTitle = userTitle;
+							var incomeTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
+								.text("State resdient median income VS. online dater median income").attr("x", 90).attr("y", 30);
+							var eduTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
+								.text("State resident college education VS. online dater college education").attr("x", 90).attr("y", 30);
+							var childTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
+								.text("State resident number of children VS. online dater number of children").attr("x", 90).attr("y", 30);
+							var lgbtTitle = svgMap.append("text").style("visibility", "hidden").attr("class", "mapTitle")
+								.text("State residents in the LGBT community VS. online daters in LGBT community").attr("x", 90).attr("y", 30);
 							/************* Legends *************/
 							//User Legend
 							var userLegend = svgMap.append("g").style("visibility", "visible");
-							var userX = 90;
-							userLegend.append("text").text("Percentage of Online Dating Users").attr("x", userX).attr("y", 22);
+							var userX = 390;
+							userLegend.append("text").text("Percentage of Online Dating Users").attr("x", userX).attr("y", 452);
 							for (var usr=0; usr<4; usr++){
-								userLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", userColor[usr]).attr("x", userX).attr("y", 28).style("opacity", 0.7);
-								userLegend.append("text").attr("x", userX).attr("y", 55).html(p0(userDomain[usr]));
+								userLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", userColor[usr]).attr("x", userX).attr("y", 458).style("opacity", 0.7);
+								userLegend.append("text").attr("x", userX).attr("y", 485).html(p0(userDomain[usr]));
 								userX+=70;
 							}
 							// Income Legend:
 							var incomeLegend = svgMap.append("g").style("visibility", "hidden");
-							var incomeX = 90;
-							incomeLegend.append("text").text("Difference in median incomes").attr("x", incomeX).attr("y", 22);
+							var incomeX = 390;
+							incomeLegend.append("text").text("Difference in median incomes").attr("x", incomeX).attr("y", 452);
 							for (var inc=0; inc<4; inc++){
-								incomeLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", incomeColor[inc]).attr("x", incomeX).attr("y", 28).style("opacity", 0.7);
-								incomeLegend.append("text").attr("x", incomeX).attr("y", 55).html("$" +incomeDomain[inc]);
+								incomeLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", incomeColor[inc]).attr("x", incomeX).attr("y", 458).style("opacity", 0.7);
+								incomeLegend.append("text").attr("x", incomeX).attr("y", 485).html(formatIncome(incomeDomain[inc]));
 								incomeX+=70;
 							}
 
 							// Edu Legend
 							var eduLegend = svgMap.append("g").style("visibility", "hidden");
-							var eduX = 90;
-							eduLegend.append("text").text("Difference in percentage of state population with some college education").attr("x", eduX).attr("y", 22);
+							var eduX = 390;
+							eduLegend.append("text").text("Difference in college education").attr("x", eduX).attr("y", 452);
 							for (var edu=0; edu<4; edu++){
-								eduLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", eduColor[edu]).attr("x", eduX).attr("y", 28).style("opacity", 0.7);
-								eduLegend.append("text").attr("x", eduX).attr("y", 55).html(p0(eduDomain[edu]));
+								eduLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", eduColor[edu]).attr("x", eduX).attr("y", 458).style("opacity", 0.7);
+								eduLegend.append("text").attr("x", eduX).attr("y", 485).html(p0(eduDomain[edu]));
 								eduX+=70;
 							}
 							
 							// Child Legend
 							var childLegend = svgMap.append("g").style("visibility", "hidden");
-							var childX = 90;
-							childLegend.append("text").text("Difference in average number of children").attr("x", childX).attr("y", 22);
+							var childX = 390;
+							childLegend.append("text").text("Difference in average number of children").attr("x", childX).attr("y", 452);
 							for (var chi=0; chi<4; chi++){
-								childLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", childColor[chi]).attr("x", childX).attr("y", 28).style("opacity", 0.7);
-								childLegend.append("text").attr("x", childX).attr("y", 55).html(sig2(childDomain[chi]));
+								childLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", childColor[chi]).attr("x", childX).attr("y", 458).style("opacity", 0.7);
+								childLegend.append("text").attr("x", childX).attr("y", 485).html(sig2(childDomain[chi]));
 								childX+=70;
 							}
 
 							// LGBT Legend
 							var lgbtLegend = svgMap.append("g").style("visibility", "hidden");
-							var lgbtX = 90;
-							lgbtLegend.append("text").text("Difference in percentage of those who identify with the LGBT community").attr("x", lgbtX).attr("y", 22);
+							var lgbtX = 390;
+							lgbtLegend.append("text").text("Difference in percentage of those in the LGBT community").attr("x", lgbtX).attr("y", 452);
 							for (var lg=0; lg<4; lg++){
-								lgbtLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", lgbtColor[lg]).attr("x", lgbtX).attr("y", 28).style("opacity", 0.7);
-								lgbtLegend.append("text").attr("x", lgbtX).attr("y", 55).html(p0(lgbtDomain[lg]));
+								lgbtLegend.append("rect").attr("width", 70).attr("height", 12).style("fill", lgbtColor[lg]).attr("x", lgbtX).attr("y", 458).style("opacity", 0.7);
+								lgbtLegend.append("text").attr("x", lgbtX).attr("y", 485).html(p0(lgbtDomain[lg]));
 								lgbtX+=70;
 							}
 
@@ -643,6 +661,9 @@ d3.csv("education.csv", function (error, edStates) {
 								currLegend.style("visibility", "hidden");
 								userLegend.style("visibility", "visible");
 								currLegend = userLegend;
+								currTitle.style("visibility", "hidden");
+								userTitle.style("visibility", "visible");
+								currTitle = userTitle;
 								tempStates.style("fill", function (uState) {
 									if (uState.id>56) return "#000";
 									var userStateName = stateIds[uState.id]["state"];
@@ -656,6 +677,9 @@ d3.csv("education.csv", function (error, edStates) {
 								currFilter = filters.INCOME;
 								currLegend.style("visibility", "hidden");
 								incomeLegend.style("visibility", "visible");
+								currTitle.style("visibility", "hidden");
+								incomeTitle.style("visibility", "visible");
+								currTitle = incomeTitle;
 								currLegend = incomeLegend;
 								tempStates.style("fill", function (state) {
 									if (state.id>56) return "#000";
@@ -671,6 +695,9 @@ d3.csv("education.csv", function (error, edStates) {
 								currLegend.style("visibility", "hidden");
 								eduLegend.style("visibility", "visible");
 								currLegend = eduLegend;
+								currTitle.style("visibility", "hidden");
+								eduTitle.style("visibility", "visible");
+								currTitle = eduTitle;
 								tempStates.style("fill", function (eState) {
 									if (eState.id>56) return "#000";
 									var eduStateName = stateIds[eState.id]["state"];
@@ -685,6 +712,9 @@ d3.csv("education.csv", function (error, edStates) {
 								currLegend.style("visibility", "hidden");
 								childLegend.style("visibility", "visible");
 								currLegend = childLegend;
+								currTitle.style("visibility", "hidden");
+								childTitle.style("visibility", "visible");
+								currTitle = childTitle;
 								tempStates.style("fill", function (cState) {
 									if (cState.id>56) return "#000";
 									var childStateName = stateIds[cState.id]["state"];
@@ -700,6 +730,9 @@ d3.csv("education.csv", function (error, edStates) {
 								currLegend.style("visibility", "hidden");
 								lgbtLegend.style("visibility", "visible");
 								currLegend = lgbtLegend;
+								currTitle.style("visibility", "hidden");
+								lgbtTitle.style("visibility", "visible");
+								currTitle = lgbtTitle;
 								tempStates.style("fill", function (lState) {
 									if (lState.id>56) return "#000";
 									var LGBTstateName = stateIds[lState.id]["state"];
